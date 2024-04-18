@@ -6,7 +6,7 @@ const CartComponents = () => {
     <div class="col-lg-4 col-md-6">
     <div class="single-product">
       <div class="product-img">
-        <img class="3" src="https://themewagon.github.io/eiser/img/product/new-product/n2.jpg" alt=""/>
+        <img class="3" src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/236016/tai-nghe-bluetooth-airpods-2-apple-mv7n2-trang-200923-112201-600x600.jpg" alt=""/>
         <div class="p_icon">
           
           <Link to='/product-detail'><i class="fa-regular fa-eye"></i></Link>

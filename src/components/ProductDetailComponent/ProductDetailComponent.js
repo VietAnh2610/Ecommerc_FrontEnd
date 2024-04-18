@@ -4,7 +4,7 @@ import FooterComponent from "../FooterComponent/FooterComponent";
 import React, { useState } from "react";
 import { Tab, Nav } from "react-bootstrap";
 const ProductDetailComponent = () => {
-  const [largeImage, setLargeImage] = useState('https://themewagon.github.io/eiser/img/product/new-product/n2.jpg');
+  const [largeImage, setLargeImage] = useState('https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/236016/tai-nghe-bluetooth-airpods-2-apple-mv7n2-trang-200923-112201-600x600.jpg');
 
   // Hàm xử lý sự kiện onClick để thay đổi ảnh lớn
   const changeImage = (imageUrl) => {
@@ -37,13 +37,13 @@ const ProductDetailComponent = () => {
       <img src={largeImage} alt="Large Product Image"></img>
       <ul className="product_img">
         <li>
-          <img src="https://themewagon.github.io/eiser/img/product/new-product/n2.jpg" alt="Thumbnail Image" onClick={() => changeImage('https://themewagon.github.io/eiser/img/product/new-product/n2.jpg')}></img>
+          <img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/236016/tai-nghe-bluetooth-airpods-2-apple-mv7n2-trang-200923-112201-600x600.jpg" alt="Thumbnail Image" onClick={() => changeImage('https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/236016/tai-nghe-bluetooth-airpods-2-apple-mv7n2-trang-200923-112201-600x600.jpg')}></img>
         </li>
         <li>
-          <img src="https://themewagon.github.io/eiser/img/product/inspired-product/i3.jpg" alt="Thumbnail Image" onClick={() => changeImage('https://themewagon.github.io/eiser/img/product/inspired-product/i3.jpg')}></img>
+          <img src="https://cdn.tgdd.vn/Products/Images/54/290053/tai-nghe-bluetooth-airpods-3-lightning-charge-apple-mpny3-trang-thumb1-600x6001.-600x600.jpeg" alt="Thumbnail Image" onClick={() => changeImage('https://cdn.tgdd.vn/Products/Images/54/290053/tai-nghe-bluetooth-airpods-3-lightning-charge-apple-mpny3-trang-thumb1-600x6001.-600x600.jpeg')}></img>
         </li>
         <li>
-          <img src="https://themewagon.github.io/eiser/img/product/inspired-product/i6.jpg" alt="Thumbnail Image" onClick={() => changeImage('https://themewagon.github.io/eiser/img/product/inspired-product/i6.jpg')}></img>
+          <img src="https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/320391/tai-nghe-bluetooth-true-wireless-ava-go-p210-trang-tb-600x600.jpg" alt="Thumbnail Image" onClick={() => changeImage('https://img.tgdd.vn/imgt/f_webp,fit_outside,quality_100/https://cdn.tgdd.vn/Products/Images/54/320391/tai-nghe-bluetooth-true-wireless-ava-go-p210-trang-tb-600x600.jpg')}></img>
         </li>
       </ul>
     </div>
