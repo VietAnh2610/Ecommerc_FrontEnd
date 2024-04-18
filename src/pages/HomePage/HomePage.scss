@@ -1,0 +1,80 @@
+
+.slick-dots {
+
+   top: 93%;
+  }
+  
+  .slick-dots li {
+    margin: 0 2px;
+  }
+  
+  .slick-dots li button::before {
+    font-size: 14px; 
+   
+  }
+  .Home-banner img.clicked {
+    border: none; // Loại bỏ border khi hình ảnh được nhấp vào
+  }
+  .single-feature {
+    margin-top: 30px;
+    padding: 30px 15px;
+    text-align: center;
+    border: 1px solid #eff2f3;
+    margin-bottom: 50px;
+    h3{
+        font-size: 15px;
+        font-weight: 500;
+        text-transform: uppercase;
+        margin-top: 25px;
+    }
+    p {
+        margin-bottom: 0;
+        margin-top: 10px;
+        
+    }
+  }
+  .single-feature .title i {
+    color: #4a4a4a;
+ margin: 10px 0;
+    font-size: 24px;
+    display: inline-block;
+  }
+.main_title {
+  text-align: center;
+  margin-bottom: 75px;
+  h2 > span {
+    font-size: 24px;
+    display: block;
+    border-bottom: 1px solid #dcd7d7; /* Màu và kiểu gạch ngăn của tiêu đề */
+  padding-bottom: 5px; /* Khoảng cách giữa tiêu đề và đoạn văn bản */
+  display: inline-block; 
+  }
+  p {
+    font-size: 14px;
+    color: #797979;
+  }
+}
+.offer-area-img {
+  width: 100vw;
+  max-height: 600px;
+}
+.new_product {
+  background: #f6f6f6;
+  padding: 90px 15px;
+  text-align: center;
+  h5 {
+    font-size: 20px;
+    color: #4a4a4a;
+    margin-bottom: 20px;
+  }
+  h4{
+    margin-bottom: 40px;
+  }
+  h3 {
+    font-size: 32px;
+    font-weight: 700;
+  }
+  .product-img img{
+    padding: 30px 0;
+  }
+}

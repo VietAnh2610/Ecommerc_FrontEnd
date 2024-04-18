@@ -1,0 +1,131 @@
+.singup {
+    width: 100vw;
+    height: 100vh;
+    background-color: #e9e8e8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      margin-left: 50%;
+      transform: translateX(-50%);
+    }
+.jyAQAr {
+
+    background: rgb(248, 248, 248);
+    display: flex;
+    
+    border-radius: 20px;
+    position: relative;
+    margin-top: -300px;
+    
+}
+.jyAQAr .btn-close {
+
+
+    position: absolute;
+    right: -8px;
+    top: -8px;
+    width: 20px;
+    height: 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    
+}
+.jyAQAr .btn-close:hover  {
+    outline: none;
+}
+.jyAQAr .btn-close img {
+    width: 30px;
+    color: white;
+}
+
+.iwneWf {
+    width: 500px;
+    padding: 40px 45px 24px;
+    background: rgb(255, 255, 255);
+    border-radius: 20px 0px 0px 20px;
+}
+.cxqVZX {
+    background: linear-gradient(136deg, rgb(240, 248, 255) -1%, rgb(219, 238, 255) 85%);
+    width: 300px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0px 20px 20px 0px;
+}
+.jdahxv .input {
+    position: relative;
+    z-index: 1;
+}
+
+.input > input::placeholder {
+    font-size: 20px;
+  
+}
+.input > input {
+    width: 100%;
+    padding: 10px ;
+    border: 1px solid #333;
+    border-radius: 5px;
+    
+}
+
+.input > input:focus {
+    border: 0;
+    outline: none;
+    border: 1px solid #333;
+
+}
+.button_continue {
+    width: 100%;
+    border: navajowhite;
+    margin-top:40px;
+    height: 50px;
+    background-color: rgb(113,205,21);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: white;
+
+}
+.login-with-email {
+margin-top: 10px;
+text-align: center;
+} 
+.ghIlRk {
+    margin: 0 auto;
+    
+}
+.ghIlRk >p {
+    text-align: center;
+    margin-top: 50px;
+}
+.social__items {
+    width: 100%;
+    width: 140px;
+    display: flex;
+    
+  
+ margin: 0 auto;
+
+padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+.social__item {
+    list-style: none;
+}
+.social__item img {
+    cursor: pointer;
+    width: 60px;
+}
+.note {
+    font-size: 13px;
+}
+.login-with-email {
+    color:rgb(63, 96, 180) ;
+    cursor: pointer;
+}
