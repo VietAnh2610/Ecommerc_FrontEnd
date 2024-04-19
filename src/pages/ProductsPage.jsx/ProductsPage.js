@@ -6,7 +6,7 @@ import FooterComponent from "../../components/FooterComponent/FooterComponent";
 
 const ProductsPage = () => {
   return (
-    <div>
+    <div style={{marginTop:110}}>
       <div className="menu-top d-flex align-items-center">
         <div className="container">
           <div class="banner_content d-md-flex justify-content-between align-items-center">

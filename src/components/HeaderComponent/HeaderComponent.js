@@ -65,7 +65,7 @@ const HeaderComponent = () => {
         </Link>
       </li>
       <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-        <Link to="" className="nav-link">
+        <Link to="/Blog" className="nav-link">
           TIN TỨC
         </Link>
       </li>

@@ -3,7 +3,7 @@ import "./SingUpPage.scss";
 import {Link} from 'react-router-dom'
 const SingInPage = () => {
   return (
-    <div className="singup">
+    <div style={{marginTop:110}} className="singup">
       <div class="styles__Root-sc-2hr4xa-0 jyAQAr">
         <button class="btn-close">
           <img

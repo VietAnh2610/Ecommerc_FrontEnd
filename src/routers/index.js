@@ -5,6 +5,7 @@ import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProductDetailComponent from "../components/ProductDetailComponent/ProductDetailComponent";
 import SingInPage from "../pages/SingInPage/SingInPage";
 import SingUpPage from "../pages/SingUpPage/SingUpPage";
+import BlogPage from "../pages/BlogPage/BlogPage";
 const routes  = [
 {
     path: '/',
@@ -43,6 +44,13 @@ const routes  = [
 {
     path: '/singup',
     page: SingUpPage,
+    isShowHeader: true
+
+
+},
+{
+    path: '/Blog',
+    page: BlogPage,
     isShowHeader: true
 
 

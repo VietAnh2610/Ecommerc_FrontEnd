@@ -16,7 +16,7 @@ const SingUpPage = () => {
   };
 
   return (
-    <div className="singin">
+    <div style={{marginTop:110}} className="singin">
       <div className="styles__Root-sc-2hr4xa-0 jyAQAr">
         <button className="btn-close">
           <img
@@ -53,7 +53,7 @@ const SingUpPage = () => {
           <p className="Forgot_password">Quên mật khẩu</p>
           <div className='singUp_footer'>
             <p>Bạn chưa có tài khoản?</p>
-            <span>Tạo tài khoản</span>
+            <Link to='/singup'><span>Tạo tài khoản</span></Link>
           </div>
         </div>
         <div className="styles__Right-sc-2hr4xa-2 cxqVZX">

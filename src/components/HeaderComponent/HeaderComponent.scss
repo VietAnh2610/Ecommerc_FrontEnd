@@ -1,3 +1,13 @@
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Đảm bảo header hiển thị trên các phần tử khác */
+  background-color: #fff; /* Điều chỉnh màu nền của header nếu cần */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng bóng cho header */
+}
+
 .navbar-brand > img {
   font-size: 20px;
 }
