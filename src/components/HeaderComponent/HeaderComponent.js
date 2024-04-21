@@ -1,33 +1,34 @@
 import React from "react";
 import "./HeaderComponent.scss";
 import { Link } from "react-router-dom";
-import { useLocation } from 'react-router-dom'; // Import useLocation từ react-router-dom
+import { useLocation } from "react-router-dom"; // Import useLocation từ react-router-dom
 
 const HeaderComponent = () => {
   const location = useLocation();
   return (
-   <header>
-
+    <header className="">
       <div className="top-menu">
-        <div className="container">
+        <div className="container px-5">
           <div className="row ">
             <div className="col-lg-7 ">
               <div className="top-menu-left  d-flex  align-items-center">
-                <p>Điện thoại: 0849193858 </p> 
-                <p style={{borderRight:'none'}}>email: quang1602@gmail.com</p>
+                <p>Điện thoại: 0849193858 </p>
+                <p style={{ borderRight: "none" }}>
+                  email: quang1602@gmail.com
+                </p>
               </div>
             </div>
             <div className="col-lg-5">
               <div className="float-right">
                 <ul className="right_side d-flex">
                   <li>
-                    <a href="/singin">Đăng nhập</a>
-                  </li> 
-                  <li >
-                    <a href="/singup">Đăng ký</a> 
+                    <Link to="/singin">Đăng nhập</Link>
                   </li>
                   <li>
-                    <a style={{borderRight:'none'}}>VI</a>
+                    <Link to="/singup">Đăng ký</Link>
+                  </li>
+                  <li>
+                    <a style={{ borderRight: "none" }}>VI</a>
                   </li>
                 </ul>
               </div>
@@ -35,7 +36,7 @@ const HeaderComponent = () => {
           </div>
         </div>
       </div>
-      <div className="container header ">
+      <div className="container header px-5 ">
         <nav className="navbar navbar-expand-lg navbar-light  py-3">
           <div className="container-fluid">
             <Link to="/" className="navbar-brand" href="#">
@@ -52,31 +53,49 @@ const HeaderComponent = () => {
             >
               <span className="navbar-toggler-icon"></span>
             </button>
-            <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul className="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
-      <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-        <Link to="/" className="nav-link">
-          TRANG CHỦ
-        </Link>
-      </li>
-      <li className={`nav-item ${location.pathname === '/products' ? 'active' : ''}`}>
-        <Link to="/products" className="nav-link">
-          CỬA HÀNG
-        </Link>
-      </li>
-      <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-        <Link to="/Blog" className="nav-link">
-          TIN TỨC
-        </Link>
-      </li>
-      <li className={`nav-item ${location.pathname === '/' ? 'active' : ''}`}>
-        <Link to="" className="nav-link">
-          GIỚI THIỆU
-        </Link>
-      </li>
-    </ul>
+            <div
+              className="collapse navbar-collapse"
+              id="navbarSupportedContent"
+            >
+              <ul className="navbar-nav me-auto mb-2 mb-lg-0 justify-content-center">
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/" className="nav-link">
+                    TRANG CHỦ
+                  </Link>
+                </li>
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/products" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/products" className="nav-link">
+                    CỬA HÀNG
+                  </Link>
+                </li>
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/Blog" className="nav-link">
+                    TIN TỨC
+                  </Link>
+                </li>
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/" ? "active" : ""
+                  }`}
+                >
+                  <Link to="" className="nav-link">
+                    GIỚI THIỆU
+                  </Link>
+                </li>
+              </ul>
               <form className="d-flex input">
-                
                 <button
                   style={{ marginRight: -13 }}
                   className="btn btn-search "
@@ -97,9 +116,7 @@ const HeaderComponent = () => {
           </div>
         </nav>
       </div>
-
-   </header>
-  
+    </header>
   );
 };
 

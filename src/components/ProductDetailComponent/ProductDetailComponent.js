@@ -15,7 +15,7 @@ const ProductDetailComponent = () => {
   return (
     <div style={{marginTop:110}} >
       <div className="menu-top d-flex align-items-center">
-        <div className="container">
+        <div className="container px-5">
           <div class="banner_content d-md-flex justify-content-between align-items-center">
             <div class="mb-3 mb-md-0">
               <h2 style={{ fontSize: 27 }}>Chi tiết sản phẩm</h2>

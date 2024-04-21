@@ -8,7 +8,7 @@ const ProductsPage = () => {
   return (
     <div style={{marginTop:110}}>
       <div className="menu-top d-flex align-items-center">
-        <div className="container">
+        <div className="container px-5">
           <div class="banner_content d-md-flex justify-content-between align-items-center">
             <div class="mb-3 mb-md-0">
               <h2 style={{fontSize:27}}>Danh mục cửa hàng</h2>
@@ -22,7 +22,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
-      <div className="container py-5">
+      <div className="container py-5 px-5">
         <div className="homepage">
           <div className="row">
             <div className="col-lg-3  ">

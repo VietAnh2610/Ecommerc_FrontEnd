@@ -1,0 +1,85 @@
+.singin {
+    width: 100vw;
+    height: auto;
+    background-color: #e9e8e8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 350px;
+    padding-bottom: 100px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .input_login  {
+    margin-top: 10px;
+    display: flex;
+    position: relative;
+  }
+  
+  .show-btn {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    cursor: pointer;
+  }
+  
+  .input_login input {
+    margin-top: 15px;
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid #bab7b7;
+  }
+  
+  .input_login input:focus {
+    outline: none;
+  }
+  
+  .Forgot_password {
+    margin-top: 10px;
+    color: rgb(80, 80, 206);
+    font-size: 13px;
+    cursor: pointer;
+  }
+  
+  .singUp_footer {
+    display: flex;
+    font-size: 13px;
+    margin-top: -5px;
+  }
+  
+  .singUp_footer > p {
+    color: #817e7e;
+    margin-right: 20px;
+  }
+  
+  .singUp_footer > span {
+    color: rgb(80, 80, 206);
+    cursor: pointer;
+  }
+  
+  .Back_singUp i {
+    margin-bottom: 30px;
+    font-size: 20px;
+    color: #817e7e;
+  }
+  .error-message {
+    color: var(--text-color);
+    font-size: 12px;
+    margin-top: 45px;
+    position: absolute;
+
+  }
+  .err-login {
+    position: absolute;
+  }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Màu nền với độ mờ */
+    z-index: 9999; /* Đảm bảo lớp này nằm trên mọi nội dung khác */
+  }
+  

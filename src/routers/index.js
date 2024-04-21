@@ -1,6 +1,6 @@
 import OrderPage from "../pages/OrderPage/OrderPage";
 import HomePage from "../pages/HomePage/HomePage"
-import ProductsPage from '../pages/ProductsPage.jsx/ProductsPage';
+import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProductDetailComponent from "../components/ProductDetailComponent/ProductDetailComponent";
 import SingInPage from "../pages/SingInPage/SingInPage";

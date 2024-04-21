@@ -1,46 +1,19 @@
 import React from "react";
 import "./HomePage.scss";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import CartComponents from "../../components/CartComponents/CartComponents";
 import { Link } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
+import HomeSlider from "../../components/HomeSlider/HomeSlider";
 const HomePage = () => {
-  const bannerImages = [
-    "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/iphone-15-17390-sliding.png",
-    "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/GALAXY-AI-WEEK-homepage.png",
-    "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/Sliding%20air%2013mb.png",
-    "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/soundpeats_watch_4_sliding.jpg",
-  ];
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-  };
+ 
 
   return (
     <div className="Home">
-      <div className="Home-banner">
-        <Slider {...settings}>
-          {bannerImages.map((image, index) => (
-            <div key={index}>
-              <img
-                src={image}
-                alt={`Slide ${index + 1}`}
-                style={{ maxHeight: "600px", width: "100vw" }}
-              />
-            </div>
-          ))}
-        </Slider>
-      </div>
-      <section className="feature-area ">
-        <div className="container">
+     <HomeSlider/>
+      <section className="feature-area px-5 ">
+        <div className="container px-5">
           <div class="row">
             <div class="col-lg-3 col-md-6">
               <div class="single-feature">
@@ -94,7 +67,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <div className="col-lg-9  container  ">
+      <div className="col-lg-9  container px-5 ">
         <div className="products row d-flex flex-wrap">
           <CartComponents />
           <CartComponents />
@@ -110,7 +83,7 @@ const HomePage = () => {
           ></img>
         </div>
       </section>
-      <section className="new_product_area py-4 container">
+      <section className="new_product_area py-5 container">
         <div className="row new_product_area-left justify-content-center">
           <div className="col-lg-12">
             <div class="main_title">
@@ -121,7 +94,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-        <div class="row">
+        <div class="row px-5">
           <div class="col-lg-6">
             <div class="new_product">
               <h5 class="text-uppercase">Bộ sưu tập năm 2024</h5>
@@ -278,7 +251,7 @@ const HomePage = () => {
         </div>
       </section>
       <section className="">
-      <div className="row new_product_area-left justify-content-center">
+      <div className="row new_product_area-left justify-content-center ">
           <div className="col-lg-12">
             <div class="main_title">
               <h2>
