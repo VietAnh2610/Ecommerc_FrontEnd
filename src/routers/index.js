@@ -6,6 +6,7 @@ import ProductDetailComponent from "../components/ProductDetailComponent/Product
 import SingInPage from "../pages/SingInPage/SingInPage";
 import SingUpPage from "../pages/SingUpPage/SingUpPage";
 import BlogPage from "../pages/BlogPage/BlogPage";
+import ProfilePage from "../pages/Profile/ProfilePage";
 const routes  = [
 {
     path: '/',
@@ -51,6 +52,13 @@ const routes  = [
 {
     path: '/Blog',
     page: BlogPage,
+    isShowHeader: true
+
+
+},
+{
+    path: '/profile-user',
+    page: ProfilePage,
     isShowHeader: true
 
 

@@ -3,26 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^2.2.2",
+    "@reduxjs/toolkit": "^2.2.3",
     "@tanstack/react-query": "^5.29.2",
     "@tanstack/react-query-devtools": "^5.29.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.15.4",
+    "assert": "^2.1.0",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "jquery": "^3.7.1",
+    "jwt-decode": "^4.0.0",
     "popper.js": "^1.16.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
     "react-query": "^3.39.3",
     "react-redux": "^9.1.0",
-    "react-router-dom": "^6.22.3",
+    "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
     "react-slick": "^0.30.2",
+    "react-toastify": "^10.0.5",
+    "redux-thunk": "^3.1.0",
     "sass": "^1.75.0",
     "scss": "^0.2.4",
     "slick-carousel": "^1.8.1",
@@ -55,5 +59,6 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2"
-  }
+  },
+  "proxy": "http://localhost:3001"
 }

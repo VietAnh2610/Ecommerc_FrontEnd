@@ -6,7 +6,7 @@ import "slick-carousel/slick/slick-theme.css";
 const HomeSlider = () => {
     const bannerImages = [
         "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/iphone-15-17390-sliding.png",
-        "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/GALAXY-AI-WEEK-homepage.png",
+        "https://images.fpt.shop/unsafe/fit-in/800x300/filters:quality(90):fill(white)/fptshop.com.vn/Uploads/Originals/2024/3/31/638475222633514471_H1.png",
         "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/Sliding%20air%2013mb.png",
         "https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/soundpeats_watch_4_sliding.jpg",
       ];

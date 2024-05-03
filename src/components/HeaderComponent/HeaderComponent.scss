@@ -3,9 +3,9 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000; /* Đảm bảo header hiển thị trên các phần tử khác */
-  background-color: #fff; /* Điều chỉnh màu nền của header nếu cần */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Tạo hiệu ứng bóng cho header */
+  z-index: 1000;
+  background-color: #fff; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
 
 .navbar-brand > img {
@@ -72,7 +72,146 @@ height: 30px;
     padding: 0 19px;
 
   }
- 
+
+}
+.infomation-user {
+  top: 100%;
+  background-color: rgb(255, 255, 255);
+  display: none;
+  transition: all 0.5s ease;
+  text-transform: none;
+  width: 160px;
+  border-radius: 5px;
+  padding: 10px 0;
+  margin-left: -16px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  position: absolute;
+
+ .infomation-user_list {
+
+    display: flex;
+    font-size: 13px;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+  ul{
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+   li {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1px 0;
+    padding-left: 20px;
+    font-size: 13px;
+    text-transform: none;
+    text-align: center;
+
+    i {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      padding-right: 10px;
+    }
+    
+    > &:hover {
+      background-color: rgb(246,246,246);
+    }
+   }
+  }
+ }
+}
+
+.infomation-user_list button {
+  background-color: white;
+  color: #000000A6;
+  border: none;
+  margin-top: 15px;
+  font-size: 13px;
+  transition: 0.3s ease;
+&:hover {
+  color: var(--text-color);
+}
+}
+
+.login:hover .infomation-user {
+  display: flex;
+  transition: all 1s ease;
+
+}
+.user_login-item {
+  
+  > li:last-child {
+    border-left: 1px solid #79797979;;
+  }
+  position: relative;
+
+  float: right;
+  margin-bottom: 0;
+align-items: center;
+justify-content: center;
+  .infomation-user_list-item {
+    color: #000000A6;
+  }
+
+  .infomation-user_list-item {
+    >li:last-child{
+      border-top: 1px solid rgb(246,246,246);
+    }
+    >li:first-child {
+      display: flex;
+      
+    }
+    .profile {
+     display: flex;
+     align-items: center;
+     
+     font-size: 13px;
+     text-transform: none;
+    }
+    transition: 0.3s ease;
+    &:hover {
+
+      color: var(--text-color);
+    }
+  }
+li {
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  color: #4a4a4a;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 0 19px;    
+  transition: all 0.3s ease;
+
+  &:hover{
+  color: var(--text-color);
+  background-color: rgb(246,246,246);
+ }
+    list-style: none;
+   a {
+      text-decoration: none;
+      color: #4a4a4a;
+      font-size: 11px;
+      text-transform: uppercase;
+      
+   }
+   a:hover {
+    color: var(--text-color);
+   }
+  }
 }
 .right_side {
  float: right;

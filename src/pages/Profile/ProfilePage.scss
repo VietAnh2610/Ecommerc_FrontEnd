@@ -1,0 +1,250 @@
+.profile-menu {
+}
+.profile-account {
+    // background-color: aqua;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px
+}
+.info {
+    font-size: 13px;
+    strong {
+        font-size: 16px;
+    }
+}
+.profile-menu-avata {
+    img {
+        border-radius: 50%;
+        width: 20%;
+    }
+    .info  {
+        margin-left: 10px;
+    }
+    margin-bottom: 15px;
+}
+.profile-menu-list {
+    list-style: none;
+    padding-right: 10px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    li {
+  
+        transition: all 0.3s ease;
+        align-items: center;
+        display: flex;
+        font-size: 14px;
+        width: 100%;
+        float: left;
+        text-align: center;
+        margin: 0;
+        padding: 8px 0;
+        cursor: pointer;
+        color: #000000A6;
+        i {
+            width: 25px;
+            height: 25px;
+            font-size: 15px;
+            margin-right: 15px;
+        transition: all 0.3s ease;
+
+            margin-left: 10px;
+            display: flex;
+           align-items: center;
+           justify-content: center;
+           color: #000000A6;
+        }
+        &:hover {
+            background-color:rgb(228, 225, 225) ;
+            color: var(--text-color);
+            i {
+                color: var(--text-color);
+
+            }
+        }
+       
+    }
+    li:nth-child(5) {
+        img {
+            width: 25px;
+            height: 25px;
+            margin-right: 15px;
+            margin-left: 10px;
+
+        }
+    }
+
+}
+.profile-account {
+    .profile-account-right {
+        padding-left: 22px;
+        border-left: 1px solid rgb(255,255,255);
+    }
+}
+
+.avatar-view {
+    border-radius: 50%;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--text-color);
+    position: relative;
+    cursor: pointer;
+    img{
+        width: 50%;
+    
+    }
+    .edit {
+        background-color: #a29e9e;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+        left: 90px;
+        position: absolute;
+        img {
+            width: 16px;
+         cursor: pointer;
+           
+        }
+    }
+}
+.form-name {
+    width: 390px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-controls {
+    
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin: 0px 0px 34px;
+width: 100%;
+justify-content: space-between;
+   .input-lable {
+    min-width: 110px;
+    font-size: 14px;
+    color: rgb(51, 51, 51);
+    margin-right: 16px;
+   }
+    .input {
+        border: 1px solid rgb(207, 206, 206);
+        border-radius: 5px;
+      width: 250px;
+      padding: 7px;
+      margin-right: 20px;
+
+    }
+    .input:focus{
+        outline: none;
+    }
+}
+.container-account{
+    background-color: rgb(246,246,246);
+    padding-bottom: 100px;
+}
+.form-control1 {
+    display: flex;
+    justify-content: space-between;
+   align-items: center;
+   
+    width: 382px;
+    .eQckrx > input {
+     width: 70px;
+    }
+    .from {
+        display: flex;
+        align-items: center;
+       
+    }
+}
+
+.ss {
+ 
+    margin-right: 20px;
+}
+.profile-account-left {
+    border-right: 1px solid rgb(218, 218, 218);
+}
+.account-right-top-SDT  {
+    border-bottom: 1px solid rgb(218, 218, 218) ;
+    width: 100%;
+    margin-top: 15px;
+    justify-content: space-between;
+    align-items: center;
+    button {
+        background-color: white;
+        width: 100px;
+        height: 40px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--text-color);
+        color: white;
+        transition: all 0.3s ease;
+        &:hover {
+            background-color: white;
+            border: 1px solid var(--text-color);
+            color: var(--text-color);
+        }
+    }
+    .account-right-top-SDT-info {
+        display: flex;
+        width: 100%;
+        > i {
+            font-size: 16px;
+            margin-right: 10px;
+            margin-top: 4px;
+            color:rgb(51, 51, 51) ;
+        }
+        .info-account {
+            margin-bottom: 20px;
+           display: flex;
+justify-content: space-between;     
+width: 100%;   }
+        .info-account input {
+            padding: 7px;
+            width: 180px;
+            border: 1px solid rgb(207, 206, 206);
+            &:focus {
+                outline: none;
+            }
+            border-radius: 5px;
+        }
+    }
+}
+
+.button-accout {
+    display: flex;
+    justify-content: center;
+    > button {
+
+        background-color: white;
+            width: 150px;
+            height: 40px;
+            border: none;
+            margin-top: 50px;
+            border-radius: 5px;
+            background-color: var(--text-color);
+            color: white;
+            transition: all 0.3s ease;
+            &:hover {
+                background-color: white;
+                border: 1px solid var(--text-color);
+                color: var(--text-color);
+            }
+    }
+}

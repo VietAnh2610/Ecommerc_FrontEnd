@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./SingUpPage.scss";
-import { Link, Navigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import * as UserService from "../../services/UserService";
 import { UseMutationHooks } from "../../hooks/UseMutationHook";
-import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import SuccessMessage from "../../components/SuccessMessage/SuccessMessage";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const SingInPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -14,34 +14,9 @@ const SingInPage = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
-  const [isLoading, setIsLoading] = useState(false); // Thêm state cho loading
-  const [isDisabled, setIsDisabled] = useState(true); // Thêm biến trạng thái để kiểm tra nút Đăng Nhập có được kích hoạt hay không
-
-  const [successMessage, setSuccessMessage] = useState('');
-  const [redirect, setRedirect] = useState(false); // State cho chuyển hướng
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [countdown, setCountdown] = useState(3); // Thời gian đếm ngược
 
 
-  useEffect(() => {
-    let timer;
-    if (showSuccessMessage) {
-      timer = setTimeout(() => {
-        setCountdown((prevCountdown) => prevCountdown - 1);
-      }, 1000); // Giảm thời gian đếm ngược mỗi giây
-    }
-    return () => clearTimeout(timer);
-  }, [showSuccessMessage, countdown]);
-
-  useEffect(() => {
-    if (countdown === 0) {
- 
-    }
-  }, [countdown]);
+  const [isDisabled, setIsDisabled] = useState(true); 
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -60,65 +35,43 @@ const SingInPage = () => {
     setPassword(e.target.value);
     setIsDisabled(!email || !confirmPassword || !e.target.value);
   };
+  
   const handleOnchangeConfirmPassword = (e) => {
     setConfirmPassword(e.target.value);
     setIsDisabled ( !password || !e.target.value);
   };
-  const handleSignUp = (e) => {
+
+  const handleSignUp = async (e) => {
     e.preventDefault();
     mutation.mutate({
       email,
       password,
       confirmPassword,
     });
-  
     if (email && password) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   
-    if (!email) {
-      setEmailError("Vui lòng nhập Email");
-    } else {
-      setEmailError("");
-    }
-    if (!password) {
-      setPasswordError("Mật khẩu không thể để trống");
-    } else {
-      setPasswordError("");
-    }
-    if (!confirmPassword) {
-      setConfirmPasswordError("Mật khẩu không thể để trống");
-    } else {
-      setConfirmPasswordError("");
-    }
-    setIsLoading(true);
-  
-    setTimeout(() => {
-      setIsLoading(false);
-      setSuccessMessage('Đăng ký thành công!');
-      setShowSuccessMessage(true);
-
-      setTimeout(() => {
-        setShowSuccessMessage(false);
-        setRedirect(true); 
-      }, 3000); 
-    }, 2000);
+    
+   
   };
-  
+  const navigate = useNavigate();
   const mutation = UseMutationHooks((data) => UserService.singupUser(data));
   const { data, isPending } = mutation;
 
- 
+  if (data && data.status === "OK") {
+    toast.success("Đăng ký thành công!");
+    navigate("/singin");
+   
+  }
 
   return (
     <div>
-       {redirect && !(data?.status === "ERR") && <Navigate to="/singin" />}
-
        <div>
 
-      {isLoading && <div className="overlay"></div>}
+      {/* {isLoading && <div className="overlay"></div>} */}
 
       <div style={{ marginTop: 110 }} className="singup">
         <div className="styles__Root-sc-2hr4xa-0 jyAQAr">
@@ -128,12 +81,7 @@ const SingInPage = () => {
                 <h4>Xin chào,</h4>
                 <p>Tạo tài khoản tại đây</p>
               </div>
-              
-           {showSuccessMessage && (
-        <div>
-          <SuccessMessage message={`${successMessage} chuyển qua đăng nhập sau ${countdown}s`} />
-        </div>
-      )}
+       
 
               <form onSubmit={handleSignUp}>
                 <div className="input_login">
@@ -144,7 +92,6 @@ const SingInPage = () => {
                     value={email}
                     onChange={handleOnchangeEmail}
                   />
-                  <p className="error-message">{emailError}</p>
                 </div>
                 <div className="input_login">
                   <input
@@ -153,7 +100,6 @@ const SingInPage = () => {
                     value={password}
                     onChange={handleOnchangePassword}
                   />
-                  <p className="error-password">{passwordError}</p>
                   <span className="show-btn" onClick={togglePasswordVisibility}>
                     <i
                       className={
@@ -169,7 +115,6 @@ const SingInPage = () => {
                     value={confirmPassword}
                     onChange={handleOnchangeConfirmPassword}
                   />
-                  <p className="error-password">{confirmPasswordError}</p>
                   <span
                     className="show-btn"
                     onClick={toggleConfirmPasswordVisibility}
@@ -181,7 +126,7 @@ const SingInPage = () => {
                     ></i>
                   </span>
                 </div>
-                {isLoading && <LoadingComponent />}
+               
                 <div className="err-login" style={{ marginTop: 5 }}>
                   {data?.status === "ERR" && (
                     <span style={{ paddingTop: 10, color: "red" }}>
@@ -191,7 +136,7 @@ const SingInPage = () => {
                 </div>
                 <button className="button_continue" type="submit" disabled={isDisabled}>
                   {" "}
-                  {isLoading ? "Đang đăng ký..." : "Tiếp tục"}
+                  Tiếp tục
                 </button>
               </form>
               <Link style={{ textDecoration: "none" }} to="/singin">

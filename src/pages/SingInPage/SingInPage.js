@@ -1,19 +1,26 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Navigate } from "react-router-dom";
+
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import "./SingInPage.scss";
 import * as UserService from "../../services/UserService";
 import { UseMutationHooks } from "../../hooks/UseMutationHook";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
+import { jwtDecode } from "jwt-decode";
+import {useDispatch} from 'react-redux'
+  import { updateUser } from "../../redux/counter/userSlide";
 const SingUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Thêm state cho loading
-  const [isDisabled, setIsDisabled] = useState(true); // Thêm biến trạng thái để kiểm tra nút Đăng Nhập có được kích hoạt hay không
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const dispatch = useDispatch();
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -28,27 +35,42 @@ const SingUpPage = () => {
     setIsDisabled(!email || !e.target.value);
   };
 
+  const mutation = UseMutationHooks((data) => UserService.loginUser(data));
+  const { data } = mutation;
+
+  useEffect(() => {
+    if (data && data.status === "OK") {
+     
+      localStorage.setItem("access_token", JSON.stringify(data.access_token));
+      if (data?.access_token) {
+        const decoded = jwtDecode(data?.access_token);
+       
+        if (decoded && decoded?.id) {
+          handleGetDetailsUser(decoded?.id, data?.access_token);
+          setIsLoggedIn(true);
+
+        }
+      }
+    }
+  }, [data]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Xóa các lỗi trước khi gửi yêu cầu
     setEmailError("");
     setPasswordError("");
-
-    // Gửi yêu cầu đăng nhập
     setIsLoading(true);
     try {
-      await mutation.mutateAsync({
+      const response = await mutation.mutateAsync({
         email,
         password,
       });
-      // Xử lý khi đăng nhập thành công (ví dụ: chuyển hướng)
+    
     } catch (error) {
-      // Xử lý lỗi khi đăng nhập không thành công
       if (error.response && error.response.data) {
         const { message } = error.response.data;
         if (message.includes("email")) {
           setEmailError(message);
+          
         } else if (message.includes("password")) {
           setPasswordError(message);
         }
@@ -58,14 +80,19 @@ const SingUpPage = () => {
     }
   };
 
-  const mutation = UseMutationHooks((data) => UserService.loginUser(data));
-  const { data } = mutation;
-console.log(data)
+  const handleGetDetailsUser = async (id, token) => {
+    const res = await UserService.getDetailsUser(id, token);
+    // console.log('res', res)
+    dispatch(updateUser({ ...res?.data, access_token: token }));
+  };
 
+  if (isLoggedIn) {
+    return <Navigate to="/" replace />;
+  }
   return (
     <div>
-       {isLoading && <div className="overlay"></div>}
-            <div style={{ marginTop: 110 }} className="singin">
+      {isLoading && <LoadingComponent />}
+      <div style={{ marginTop: 110 }} className="singin">
         <div className="styles__Root-sc-2hr4xa-0 jyAQAr">
           <div className="styles__Left-sc-2hr4xa-1 iwneWf">
             <div className="Back_singUp">
@@ -102,20 +129,22 @@ console.log(data)
                   ></i>
                 </span>
               </div>
+              <div className="err-login" style={{ marginTop: 5 }}></div>
               <div className="err-login" style={{ marginTop: 5 }}>
-               
-              </div>
-              {isLoading && <LoadingComponent />}
-              <div className="err-login" style={{marginTop:5}}>
                 {data?.status === "ERR" && (
                   <span style={{ paddingTop: 10, color: "red" }}>
                     {data?.message}
                   </span>
                 )}
-            </div>
-            <button className="button_continue" type="submit" disabled={isDisabled}>
-          đăng nhập
-        </button>
+              </div>
+              <button
+                className="button_continue"
+                type="submit"
+                disabled={isDisabled}
+              >
+                {" "}
+                {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+              </button>
             </form>
 
             <p className="Forgot_password">Quên mật khẩu</p>
