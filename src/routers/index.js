@@ -7,6 +7,7 @@ import SingInPage from "../pages/SingInPage/SingInPage";
 import SingUpPage from "../pages/SingUpPage/SingUpPage";
 import BlogPage from "../pages/BlogPage/BlogPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
+import { AdminPage } from "../pages/AdminPage/AdminPage";
 const routes  = [
 {
     path: '/',
@@ -29,7 +30,7 @@ const routes  = [
 
 },
 {
-    path: '/product-detail',
+    path: '/product-detail/:id',
     page: ProductDetailComponent,
     isShowHeader: true
 
@@ -60,6 +61,14 @@ const routes  = [
     path: '/profile-user',
     page: ProfilePage,
     isShowHeader: true
+
+
+},
+{
+    path: '/system-admin',
+    page: AdminPage,
+    isShowHeader: true,
+    isPrivate: true
 
 
 },

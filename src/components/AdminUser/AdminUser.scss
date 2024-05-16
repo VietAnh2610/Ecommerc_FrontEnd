@@ -1,0 +1,92 @@
+
+
+.Admin_user-title {
+    h5{
+        font-size: 14px;
+        margin: 0;
+        padding-left: 15px;
+    }
+    background-color: white;
+    padding: 12px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    border-radius: 5px;
+    border-left: 6px solid var(--text-color);
+}
+.Admin_user_main-button-list {
+    margin: 0 10px;
+}
+.Admin_user_main {
+    background-color: white;
+    margin-top: 20px;
+    border-radius: 5px;
+    .Admin_user_main-button {
+        border: 1px solid transparent;
+        font-size: 14px;
+        background-color: rgb(157, 250, 157);
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        &:hover {
+            background-color: white;
+            color: var(--text-color);
+            border: 1px solid var(--text-color);
+            box-shadow: -3px 3px 7px rgba(0, 0, 0, 0.3);
+            i {
+                color: var(--text-color);
+            }
+        }
+        > span {
+            margin-left: 5px;
+        }
+        i {
+            color:rgb(13, 117, 13);
+            font-weight: 600;
+        }
+    }
+}
+.fa-angle-down {
+    position: absolute;
+    margin-left: 100px;
+    color: #949292;
+}
+.Admin_user_main-button-list {
+    border-bottom: 1px solid var(--text-color);
+}
+.dataTables_filter  {
+    display: flex;
+    align-items: center;
+    float: right;
+    label {
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        white-space: nowrap;
+        text-align: left;
+        background: white;
+        color: black;
+        padding: 10px;
+        border-radius: .357rem;
+        border: 1px solid #ddd;
+        width: 250px;
+        > input {
+            margin-left: 4px;
+            background-color: rgb(242, 242, 242);
+            width: 80%;
+            border: none;
+            border-radius: 5px;
+            padding: 3px;
+            text-indent: 4px;
+            border: 1px solid transparent;
+          
+           
+        }
+        > input:focus {
+            outline: none;
+            border: 1px solid #ccc;
+        }
+       
+        
+    }
+}

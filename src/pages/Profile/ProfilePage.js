@@ -7,8 +7,8 @@ import * as UserService from "../../services/UserService";
 import { UseMutationHooks } from "../../hooks/UseMutationHook";
 import { updateUser } from "../../redux/counter/userSlide";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-// import { getBase64 } from "../../utils";
-
+import { getBase64 } from "../../utils";
+import { toast } from "react-toastify";
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
   const [email, setEmail] = useState(user?.email || "");
@@ -17,14 +17,12 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState(user?.phone || "");
   const [address, setAddress] = useState(user?.address || "");
   const [avatar, setAvatar] = useState(user?.avatar || "");
-  const [selectedAvatar, setSelectedAvatar] = useState(null); 
-  const [isLoading, setIsLoading] = useState(false); 
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
   const dispatch = useDispatch();
-
   const mutation = UseMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
-    setIsLoading(true); // Hiển thị loading trước khi gọi API cập nhật
+    setIsLoading(true);
     UserService.updateUser(id, rests, access_token)
       .then(() => {
         handleGetDetailsUser(user?.id, user?.access_token);
@@ -33,10 +31,9 @@ const ProfilePage = () => {
         console.error("Có lỗi xảy ra khi cập nhật người dùng:", error);
       })
       .finally(() => {
-        setIsLoading(false); // Ẩn loading sau khi hoàn thành cập nhật (bao gồm cả khi có lỗi)
+        setIsLoading(false);
       });
   });
-  
 
   const handleGetDetailsUser = async (id, token) => {
     try {
@@ -57,7 +54,7 @@ const ProfilePage = () => {
   const handlOnchangeNickName = (e) => {
     setNickName(e.target.value);
   };
- 
+
   const handlOnchangePhone = (e) => {
     setPhone(e.target.value);
   };
@@ -66,31 +63,47 @@ const ProfilePage = () => {
     setAddress(e.target.value);
   };
 
-  const handlOnchangeAvatar = async ({ fileList }) => {
-    // setAddress(e.target.value);
-    // if(!file.url && !file.preview) {
-    //   file.preview = await getBase64(file.originFileObj)
-    // }
-    // setAvatar(file.preview)
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedAvatar(file);
   };
-  const handleUpdate = () => {
-    mutation.mutate({
+  const handleUpdate = async () => {
+    setIsLoading(true);
+
+    const avatarBase64 = selectedAvatar
+      ? await getBase64(selectedAvatar)
+      : null;
+
+    const userData = {
       id: user?.id,
       email,
       name,
       nickname,
       phone,
       address,
-      avatar,
+      avatar: avatarBase64 || user?.avatar,
       access_token: user?.access_token,
-    });
-    // setUserName(name);
+    };
+
+    try {
+      await UserService.updateUser(
+        userData.id,
+        userData,
+        userData.access_token
+      );
+      await handleGetDetailsUser(user?.id, user?.access_token);
+      toast.success("Cập nhật thông tin thành công!");
+    } catch (error) {
+      console.error("Có lỗi xảy ra khi cập nhật người dùng:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
- 
 
   return (
     <div style={{ marginTop: 110 }}>
       {isLoading && <LoadingComponent />}
+
       <div className="menu-top d-flex align-items-center ">
         <div className="container px-5">
           <div class="banner_content d-md-flex justify-content-between align-items-center">
@@ -151,29 +164,48 @@ const ProfilePage = () => {
                 <div style={{ marginTop: 27 }} className="d-flex">
                   <div className="col-lg-7 profile-account-left ">
                     <span class="info-title">Thông tin cá nhân</span>
-                    <div style={{ marginTop: 15 }}>
+                    <div style={{ marginTop: 15, marginBottom: -20 }}>
                       <from>
                         <div className="from-info d-flex justify-content-between">
                           <div class="form-avatar">
                             <div class="styles__StyleAvatar-sc-7twymm-0 iRBxWb">
                               <div>
-                                <div class="avatar-view">
-                                  <img
-                                    src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
-                                    alt="avatar"
-                                    class="default"
-                                  />
-                                  <div class="edit">
+                                <div
+                                  className="avatar-view"
+                                  style={{ overflow: "hidden" }}
+                                >
+                                  {selectedAvatar ? (
                                     <img
-                                      src="https://frontend.tikicdn.com/_desktop-next/static/img/account/edit.png"
-                                      class="edit_img"
-                                      alt=""
+                                      style={{
+                                        width: 110,
+                                        height: 110,
+                                        borderRadius: "50%",
+                                      }}
+                                      src={URL.createObjectURL(selectedAvatar)}
+                                      alt="Avatar"
                                     />
-                                  </div>
+                                  ) : avatar ? (
+                                    <img
+                                      style={{
+                                        width: 110,
+                                        height: 110,
+                                        borderRadius: "50%",
+                                      }}
+                                      src={avatar}
+                                      alt="Avatar"
+                                    />
+                                  ) : (
+                                    <img
+                                      style={{
+                                        width: 60,
+                                        height: 60,
+                                      }}
+                                      src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
+                                    />
+                                  )}
                                 </div>
                               </div>
                             </div>
-                            <div></div>
                           </div>
                           <div className="form-name">
                             <div className="form-controls">
@@ -211,6 +243,16 @@ const ProfilePage = () => {
                         </div>
                       </from>
                     </div>
+                    <label htmlFor="avatarInput" className="file-label">
+                      <p> Tải lên ảnh</p>
+                      <input
+                        id="avatarInput"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleAvatarChange}
+                        className="hidden-input"
+                      />
+                    </label>
                     <div class="form-control1">
                       <label class="input-label">Giới tính</label>
                       <form>
@@ -254,7 +296,9 @@ const ProfilePage = () => {
                     </div>
                     <div className="button-accout">
                       {" "}
-                      <button onClick={handleUpdate} disabled={isLoading}>{isLoading ? 'Đang cập nhật...' : 'Cập nhật'}</button>
+                      <button onClick={handleUpdate} disabled={isLoading}>
+                        {isLoading ? "Đang cập nhật..." : "Cập nhật"}
+                      </button>
                     </div>
                   </div>
                   <div className="col-lg-5 profile-account-right">

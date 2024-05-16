@@ -6,8 +6,20 @@ import CartComponents from "../../components/CartComponents/CartComponents";
 import { Link } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import HomeSlider from "../../components/HomeSlider/HomeSlider";
+import * as  ProductService from '../../services/ProductService'
+import { useQuery } from '@tanstack/react-query';
 const HomePage = () => {
- 
+  
+  const fetchProductAll = async () => {
+      const res = await ProductService.getAllProduct();
+      return res
+  };
+  const { data: products} = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchProductAll,
+  });
+
+
 
   return (
     <div className="Home">
@@ -69,9 +81,23 @@ const HomePage = () => {
       </section>
       <div className="col-lg-9  container px-5 ">
         <div className="products row d-flex flex-wrap">
-          <CartComponents />
-          <CartComponents />
-          <CartComponents />
+          {products?.data?.map((product) => {
+            return(
+              <CartComponents
+              key={product._id}
+              id={product._id}
+              countInStock={product.countInStock}
+              descriptions={product.description}
+              image={product.image}
+              name={product.name}
+              price={product.price}
+              rating={product.rating}
+              type={product.type}
+              original_price={product.original_price} 
+              />
+            )
+          })}
+      
         </div>
       </div>
 
