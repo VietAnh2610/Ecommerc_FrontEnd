@@ -6,7 +6,8 @@ import "./TableComponent.scss";
 import { getBase64 } from "../../utils";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { toast } from "react-toastify";
-import { Option } from "antd/es/mentions";
+const { Option } = Select; // Điều chỉnh import Option
+
 const TableComponent = () => {
   const [searchText, setSearchText] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -135,8 +136,8 @@ const TableComponent = () => {
       Modal.confirm({
         title: `Bạn chắc chắn muốn xóa ${
           selectedRowKeys.length > 1
-            ? `${selectedRowKeys.length} người dùng`
-            : "người dùng"
+            ? `${selectedRowKeys.length} sản phẩm`
+            : "sản phẩm"
         }?`,
         centered: true,
         okText: "Xóa",
@@ -145,8 +146,8 @@ const TableComponent = () => {
         onOk: async () => {
           setLoading(true);
           await Promise.all(
-            selectedRowKeys.map((productId) => {
-              return ProductService.deleteProduct(productId, accessToken);
+            (productId ? [productId] : selectedRowKeys).map((id) => {
+              return ProductService.deleteProduct(id, accessToken);
             })
           );
           setLoading(false);
@@ -161,7 +162,7 @@ const TableComponent = () => {
     } catch (error) {
       console.error("Lỗi khi xóa sản phẩm:", error);
       setLoading(false);
-      toast.error("Đã xảy ra lỗi khi xxóa sản phẩm");
+      toast.error("Đã xảy ra lỗi khi xóa sản phẩm");
     }
   };
 
@@ -260,7 +261,8 @@ const TableComponent = () => {
             onClick={() => handleDeleteProduct(record._id)}
             style={{
               marginRight: 6,
-              backgroundColor: "rgb(247, 196, 195)",
+              backgroundColor
+              : "rgb(247, 196, 195)",
               border: "none",
             }}
             className="btn btn-primary btn-sm trash"
@@ -302,9 +304,9 @@ const TableComponent = () => {
   return (
     <div>
       {loading && <LoadingComponent />}
-      <div className="py-4 ">
+      <div className="py-4">
         <div className="row d-flex justify-content-between">
-          <div className="col-sm-12 col-md-6 d-flex align-items-center ">
+          <div className="col-sm-12 col-md-6 d-flex align-items-center">
             <div className="dataTables_length" id="sampleTable_length">
               <label className="d-flex align-items-center">
                 Hiện{" "}
@@ -318,7 +320,7 @@ const TableComponent = () => {
                   }}
                   name="sampleTable_length"
                   aria-controls="sampleTable"
-                  className="form-control form-control-sm "
+                  className="form-control form-control-sm"
                   onChange={(e) => setPageSize(Number(e.target.value))}
                 >
                   <option value="8">8</option>
@@ -326,7 +328,7 @@ const TableComponent = () => {
                   <option value="50">50</option>
                   <option value="100">100</option>
                 </select>{" "}
-                <i class="fa-solid fa-angle-down"></i>
+                <i className="fa-solid fa-angle-down"></i>
                 danh mục
               </label>
             </div>
@@ -346,8 +348,8 @@ const TableComponent = () => {
         <Button
           className="delete_list_user"
           type="danger"
-          disabled={selectedRowKeys.length === 1} // Sử dụng === để so sánh
-          onClick={handleDeleteProduct}
+          disabled={selectedRowKeys.length === 0}
+          onClick={() => handleDeleteProduct(null)} // Gọi hàm xóa danh sách
         >
           <i
             style={{ marginRight: 5, color: "rgb(222, 4, 0)" }}
@@ -479,9 +481,9 @@ const TableComponent = () => {
               }}
             >
               {categories.map((type) => (
-                <option key={type} value={type}>
+                <Option key={type} value={type}>
                   {type}
-                </option>
+                </Option>
               ))}
               <Option value="new">Thêm danh mục mới</Option>
             </Select>
