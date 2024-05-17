@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
-import CartComponents_store from "../../components/CartComponents_store/CartComponents_store";
 import './ProductsPage.scss';
+import CartComponents from "../../components/CartComponents/CartComponents";
 
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
@@ -87,8 +87,9 @@ const ProductsPage = () => {
                 {products?.data
                   ?.filter((product) => selectedType === null || product.type === selectedType)
                   .map((product) => (
-                    <CartComponents_store
+                    <CartComponents
                       key={product._id}
+                      id={product._id}
                       countInStock={product.countInStock}
                       descriptions={product.description}
                       image={product.image}

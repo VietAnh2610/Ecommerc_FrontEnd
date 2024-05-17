@@ -1,18 +1,18 @@
 import React from 'react';
 import './CartComponents.scss';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const CartComponents = (props) => {
   const { id, countInStock, descriptions, image, name, price, rating, type, original_price } = props;
 
-  // Kiểm tra giá trị id
+  const location = useLocation()
   const isValidObjectId = (id) => {
     return /^[a-fA-F0-9]{24}$/.test(id);
   };
 
   if (!isValidObjectId(id)) {
-    console.error('Invalid product ID:', id);
-    return null; // Hoặc hiển thị thông báo lỗi thích hợp
+    // console.error('Invalid product ID:', id);
+    return null; 
   }
 
   const renderRatingStars = () => {
@@ -22,9 +22,9 @@ const CartComponents = (props) => {
     }
     return stars;
   };
-
+  const isProductsPage = location.pathname === '/products';
   return (
-    <div className="col-lg-3 col-md-6">
+    <div className={`col-lg-${isProductsPage ? '4' : '3'} col-md-6`}>
       <div  className="single-product">
         <Link to={`/product-detail/${id}`}>
           <div className="product-img">

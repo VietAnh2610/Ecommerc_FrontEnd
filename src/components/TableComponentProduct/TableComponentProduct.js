@@ -120,11 +120,11 @@ const TableComponent = () => {
         },
         accessToken
       );
-      toast.success("Cập nhật sản phẩm thành công!");
       setIsModalVisible(false);
       form.resetFields();
       setLoading(false);
       await refetch();
+      toast.success("Cập nhật sản phẩm thành công!");
     } catch (error) {
       console.error("Lỗi khi lưu thông tin sản phẩm:", error);
       setLoading(false);
@@ -349,7 +349,7 @@ const TableComponent = () => {
           className="delete_list_user"
           type="danger"
           disabled={selectedRowKeys.length === 0}
-          onClick={() => handleDeleteProduct(null)} // Gọi hàm xóa danh sách
+          onClick={() => handleDeleteProduct(null)} 
         >
           <i
             style={{ marginRight: 5, color: "rgb(222, 4, 0)" }}

@@ -8,7 +8,7 @@
     align-items: center;
     // background-color: aqua;
     img {
-        width: 90%;
+        width: 80%;
     }
     .product_img {
        
@@ -265,3 +265,7 @@
       color: #ffce00;
     }
   }
+  .product_img img.selected {
+    border: 2px solid var(--text-color);
+  }
+  
