@@ -3,13 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import routes from "./routers/index";
 import HeaderComponent from "./components/HeaderComponent/HeaderComponent";
 import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { isJsonString } from "./utils";
 import { jwtDecode } from "jwt-decode";
 import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/counter/userSlide";
-import axios from "axios";
 import { ToastContainer } from "react-toastify";
 
 function App() {

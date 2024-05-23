@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Link, Navigate } from "react-router-dom";
-
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import "./SingInPage.scss";
 import * as UserService from "../../services/UserService";
 import { UseMutationHooks } from "../../hooks/UseMutationHook";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import { jwtDecode } from "jwt-decode";
-import {useDispatch} from 'react-redux'
-  import { updateUser } from "../../redux/counter/userSlide";
+import { jwtDecode } from 'jwt-decode';
+
+import { useDispatch } from 'react-redux';
+import { updateUser } from "../../redux/counter/userSlide";
+
 const SingUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
@@ -18,9 +19,10 @@ const SingUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -39,16 +41,18 @@ const SingUpPage = () => {
   const { data } = mutation;
 
   useEffect(() => {
+
     if (data && data.status === "OK") {
-     
       localStorage.setItem("access_token", JSON.stringify(data.access_token));
       if (data?.access_token) {
         const decoded = jwtDecode(data?.access_token);
-       
         if (decoded && decoded?.id) {
           handleGetDetailsUser(decoded?.id, data?.access_token);
-          setIsLoggedIn(true);
-
+        }
+        if (location.state) {
+          navigate(location.state);
+        } else {
+          navigate('/');
         }
       }
     }
@@ -60,17 +64,15 @@ const SingUpPage = () => {
     setPasswordError("");
     setIsLoading(true);
     try {
-      const response = await mutation.mutateAsync({
+      await mutation.mutateAsync({
         email,
         password,
       });
-    
     } catch (error) {
       if (error.response && error.response.data) {
         const { message } = error.response.data;
         if (message.includes("email")) {
           setEmailError(message);
-          
         } else if (message.includes("password")) {
           setPasswordError(message);
         }
@@ -82,13 +84,9 @@ const SingUpPage = () => {
 
   const handleGetDetailsUser = async (id, token) => {
     const res = await UserService.getDetailsUser(id, token);
-    
     dispatch(updateUser({ ...res?.data, access_token: token }));
   };
 
-  if (isLoggedIn) {
-    return <Navigate to="/" replace />;
-  }
   return (
     <div>
       {isLoading && <LoadingComponent />}
@@ -142,7 +140,6 @@ const SingUpPage = () => {
                 type="submit"
                 disabled={isDisabled}
               >
-                {" "}
                 {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
             </form>

@@ -56,7 +56,10 @@ const ProfilePage = () => {
   };
 
   const handlOnchangePhone = (e) => {
-    setPhone(e.target.value);
+    const value = e.target.value;
+    if (/^\d{0,10}$/.test(value)) {
+      setPhone(value);
+    }
   };
 
   const handlOnchangeAddress = (e) => {
@@ -67,8 +70,16 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     setSelectedAvatar(file);
   };
+  console.log('phon', phone.length)
   const handleUpdate = async () => {
+
+    // if (phone.length !== 10) {
+
+    //   toast.error("Số điện thoại phải có đúng 10 chữ số.");
+    //   return;
+    // }
     setIsLoading(true);
+
 
     const avatarBase64 = selectedAvatar
       ? await getBase64(selectedAvatar)
@@ -313,6 +324,7 @@ const ProfilePage = () => {
                               type="search"
                               placeholder="Cập nhật SDT"
                               value={phone}
+                              maxLength="10"
                               onChange={handlOnchangePhone}
                             />
                           </div>

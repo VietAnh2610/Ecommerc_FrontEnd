@@ -1,0 +1,148 @@
+.cart-page {
+    margin-top: 110px;
+    // background-color: antiquewhite;
+    .cart-header {
+        border-bottom: 1px solid #e5e5e5;
+        color: #323232;
+        margin: auto;
+        max-width: 600px;
+        min-height: 40px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+       
+        .fa-solid  {
+            position: absolute;
+            left: 0;
+        }
+        .go-back {
+        
+            > p {
+            
+                margin: 0;
+                font-size: 18px;
+                font-weight: 500;
+            }
+        }
+    }
+}
+.listItemSuperCart {
+    margin-top: 100px;
+    max-width: 600px;
+    margin: auto;
+    // background-color: antiquewhite;
+    .select-product-action {
+        
+    }
+}
+.block__product-item__outer {
+    border-radius: 7px;
+    margin-bottom: 20px;
+
+    background-color: white;
+}
+.block__product-item {
+    padding: 20px 10px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e5e5e5;
+  
+    .select-product-action  {
+        position: relative;
+        .custom-control-input{
+            position: absolute;
+            top: 0;
+            margin-right: 30px;
+        }
+    }
+}
+.product-info {
+    width: 450px;
+    .product-info-top {
+        align-items: center;
+        // background-color: rgb(6, 182, 24);
+        > a{
+            color: black;
+            text-decoration: none;
+        }
+        >i {
+            margin-top: 3px;
+        }
+      
+    }
+}
+.box-info__box-price {
+    
+    display: flex;
+    align-items: center;
+    .product__price--show {
+        font-size: 17px;
+        color: #d70018;
+     
+        padding: 0;
+        margin: 0;
+    }
+    .product__price--through {
+        font-size: 14px;
+        color: #707070;
+        margin-left: 15px;
+        // margin-bottom: 2px;
+    }
+}
+.actions {
+    margin-right: 5px;
+ padding-top: 10px;
+    margin-bottom: 24px;
+    input {
+        width: 30px;
+        padding-left: 10px;
+        position: relative;
+        border-radius: 3px;
+        border: none;
+    }
+    button {
+        color: black;
+        border-radius: 3px;
+        
+        border: none;
+        color: #79797979;
+        width: 30px;
+        height: 30px;
+        &:hover {
+            
+            i {
+                color: #1e1e1e;
+            }
+        }
+    }
+}
+
+.BH {
+    display: flex;
+    align-items: center;
+    margin-left: 45px;
+    padding: 20px 0;
+    
+    > p{
+        display: block;
+        margin: 0;
+        margin-left: 10px;
+
+    }
+}
+.total_price {
+    color: #d70018;
+    font-weight: 600;
+    font-size: 16px;
+}
+.btn-action {
+
+    background-color: var(--text-color);
+        border: 0;
+        border-radius: 5px;
+        color: #fff;
+        cursor: pointer;
+        height: 40px;
+        padding: 5px 20px;
+}

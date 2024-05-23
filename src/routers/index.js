@@ -8,6 +8,7 @@ import SingUpPage from "../pages/SingUpPage/SingUpPage";
 import BlogPage from "../pages/BlogPage/BlogPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AdminPage } from "../pages/AdminPage/AdminPage";
+import PaymentPage from "../pages/PaymentPage/PaymentPage";
 const routes  = [
 {
     path: '/',
@@ -43,6 +44,7 @@ const routes  = [
 
 
 },
+
 {
     path: '/singup',
     page: SingUpPage,
@@ -60,6 +62,13 @@ const routes  = [
 {
     path: '/profile-user',
     page: ProfilePage,
+    isShowHeader: true
+
+
+},
+{
+    path: '/payment',
+    page: PaymentPage,
     isShowHeader: true
 
 

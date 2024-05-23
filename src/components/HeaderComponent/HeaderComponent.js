@@ -14,7 +14,7 @@ const HeaderComponent = () => {
   const [userAvatar, setUserAvatar] = useState('');
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
-
+const order = useSelector((state) => state.order)
   const handleLogout = async () => {
     try {
       await UserService.logoutUser();
@@ -41,7 +41,7 @@ const HeaderComponent = () => {
   }, [user]);
 
   return (
-    <header className="">
+    <header style={{}} className="">
       <div className="top-menu">
         <div className="container px-5">
           <div className="row ">
@@ -163,7 +163,7 @@ const HeaderComponent = () => {
                   <i className="fa-solid fa-magnifying-glass"></i>
                 </button>
                 <div className="header-right">
-                  <i className="fa-solid fa-cart-shopping"></i>
+                 <Link to="/Order"> <i className="fa-solid fa-cart-shopping"><div className="quantity-cart">{order?.orderItems?.length}</div></i></Link>
                   <i className="fa-regular fa-heart"></i>
                 </div>
                 {userAvatar ? (

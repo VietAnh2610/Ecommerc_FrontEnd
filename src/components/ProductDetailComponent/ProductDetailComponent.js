@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useParams , useNavigate} from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import * as ProductService from '../../services/ProductService';
 import './ProductDetailComponent.scss';
 import FooterComponent from '../FooterComponent/FooterComponent';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
+import { addOrderProduct } from '../../redux/counter/orderSlice';
 
 const ProductDetailComponent = () => {
   const { id } = useParams(); // Lấy tham số id từ URL
-  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [largeImage, setLargeImage] = useState('');
   const [selectedImage, setSelectedImage] = useState('');
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  const user = useSelector((state) => state.user)
-  console.log('user', user)
-  // Hàm fetch chi tiết sản phẩm dựa vào id
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); 
   const fetchProductDetails = async (productId) => {
     try {
-      // console.log('Fetching product details for ID:', productId);
       const response = await ProductService.getDetailsProduct(productId);
-      // console.log('Response:', response);
       setProduct(response.data);
       setLargeImage(response.data.image[0]); 
       setSelectedImage(response.data.image[0]); 
@@ -38,15 +35,13 @@ const ProductDetailComponent = () => {
     }
   }, [id]);
 
-
-
   const handleQuantityChange = (delta) => {
     setQuantity((prevQuantity) => {
       const newQuantity = prevQuantity + delta;
       return newQuantity < 1 ? 1 : newQuantity; 
     });
   };
-
+console.log('so luong', quantity)
   if (error) {
     return <div>{error}</div>; 
   }
@@ -54,12 +49,37 @@ const ProductDetailComponent = () => {
   if (!product) {
     return <div>Đang tải dữ liệu...</div>;
   }
-  const handleAddOderProduct = () => {
-   if(!user.id) {
-    navigate('/singin')
-    toast.error('Vui lòng đăng nhập để mua sản phẩm')
-   }
+
+  const handleAddOrderProduct = () => {
+    if (!user ) { // Kiểm tra trạng thái đăng nhập
+      toast.error('Vui lòng đăng nhập để mua sản phẩm');
+    } else {
+      dispatch(addOrderProduct({ 
+        // name: { type: String, required: true },
+        //     amount: { type: Number, required: true },
+        //     image: { type: String, required: true },
+        //     price: { type: Number, required: true },
+        //     discount: { type: Number },
+        //     product: {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         ref: 'Product',
+        //         required: true,
+        //     },
+        orderItem:{
+          name: product?.name,
+          amount: quantity,
+          image: product?.image,
+          price: product?.price,
+          product: product?._id,
+          original_price: product?.original_price,
+
+        }
+       }));
+      toast.success('Sản phẩm đã được thêm vào giỏ hàng');
+    }
   };
+  // const{ data: productDetails} = useQuery(['product-details'], fetchProductDetails)
+// console.log('productDetails',product, user)
   return (
     <div style={{ marginTop: 110 }}>
       <div className="product-detail py-5">
@@ -123,7 +143,7 @@ const ProductDetailComponent = () => {
                   </button>
                 </div>
                 <div className="card_area">
-                  <a onClick={handleAddOderProduct} className="main_btn" href="#">Thêm giỏ hàng</a>
+                  <a onClick={handleAddOrderProduct} className="main_btn" href="#">Thêm giỏ hàng</a>
                   <a className="icon_btn" href="#"><i className="fa-regular fa-gem"></i></a>
                   <a className="icon_btn" href="#"><i className="fa-regular fa-heart"></i></a>
                 </div>
