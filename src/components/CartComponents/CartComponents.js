@@ -64,7 +64,7 @@ const CartComponents = (props) => {
               <a href="#">
                 <i className="fa-regular fa-heart"></i>
               </a>
-              <a >
+              <a onClick={handleAddCart} >
                 <i onClick={handleAddCart} className="fa-solid fa-cart-plus"></i>
               </a>
             </div>

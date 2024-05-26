@@ -110,7 +110,7 @@ const HomePage = () => {
           ></img>
         </div>
       </section>
-      <section className="new_product_area py-5 container">
+      {/* <section className="new_product_area py-5 container">
         <div className="row new_product_area-left justify-content-center">
           <div className="col-lg-12">
             <div class="main_title">
@@ -276,7 +276,7 @@ const HomePage = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
       <section className="">
       <div className="row new_product_area-left justify-content-center ">
           <div className="col-lg-12">

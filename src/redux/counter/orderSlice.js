@@ -41,6 +41,7 @@ export const orderSlice = createSlice({
       if (existingItem) {
         existingItem.amount += orderItem.amount;
       } else {
+        orderItem.selected = false;
         state.orderItems.push(orderItem);
       }
       calculatePrices(state);
@@ -64,6 +65,11 @@ export const orderSlice = createSlice({
       calculatePrices(state);
       saveOrderToLocalStorage(state);
     },
+    clearCart: (state) => {
+      // Lọc ra các sản phẩm chưa được chọn và mua
+      state.orderItems = state.orderItems.filter((item) => !item.selected);
+      saveOrderToLocalStorage(state);
+    },
     clearOrder: (state) => {
       state.orderItems = [];
       state.shippingAddress = {};
@@ -76,6 +82,11 @@ export const orderSlice = createSlice({
       state.paidAt = '';
       state.isDelivered = false;
       state.deliveredAt = '';
+      saveOrderToLocalStorage(state);
+    },
+    clearPurchasedProducts: (state) => {
+      // Lọc ra các sản phẩm chưa được mua
+      state.orderItems = state.orderItems.filter((item) => !item.isPurchased);
       saveOrderToLocalStorage(state);
     },
     increaseQuantity: (state, action) => {
@@ -97,6 +108,6 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { addOrderProduct, removeOrderProduct, updateQuantity, clearOrder, increaseQuantity, decreaseQuantity } = orderSlice.actions;
+export const { addOrderProduct, removeOrderProduct, updateQuantity, clearOrder, increaseQuantity, decreaseQuantity, clearCart, clearPurchasedProducts } = orderSlice.actions;
 
 export default orderSlice.reducer;

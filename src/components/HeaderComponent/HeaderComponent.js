@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as UserService from '../../services/UserService'
 import { resetUser } from "../../redux/counter/userSlide";
 import { toast } from 'react-toastify';
+import { clearOrder } from "../../redux/counter/orderSlice";
 
 const HeaderComponent = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const order = useSelector((state) => state.order)
       dispatch(resetUser());
       toast.success("Đăng xuất thành công!");
       navigate('/singin');
+      dispatch(clearOrder());
     } catch (error) {
       toast.error("Đăng xuất thất bại!");
     }
@@ -77,10 +79,12 @@ const order = useSelector((state) => state.order)
                                </li>
                               ) : (
                                 <>
-                                  <li>
-                                    <i className="fa-regular fa-money-bill-1"></i>
-                                    <span>Đơn hàng</span>
-                                  </li>
+                                <Link style={{width:'100%'}} to={`OrderManagement/${user.id}`}>
+                                    <li>
+                                      <i className="fa-regular fa-money-bill-1"></i>
+                                      <span>Đơn hàng</span>
+                                    </li>
+                                </Link>
                                   <li>
                                     <i className="fa-regular fa-bookmark"></i>
                                     <span>Yêu thích</span>

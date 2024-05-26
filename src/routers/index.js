@@ -9,6 +9,7 @@ import BlogPage from "../pages/BlogPage/BlogPage";
 import ProfilePage from "../pages/Profile/ProfilePage";
 import { AdminPage } from "../pages/AdminPage/AdminPage";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
+import OrderManagement from "../pages/OrderManagement/OrderManagement";
 const routes  = [
 {
     path: '/',
@@ -69,6 +70,13 @@ const routes  = [
 {
     path: '/payment',
     page: PaymentPage,
+    isShowHeader: true
+
+
+},
+{
+    path: '/OrderManagement/:id',
+    page: OrderManagement,
     isShowHeader: true
 
 
