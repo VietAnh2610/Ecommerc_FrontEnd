@@ -11,6 +11,7 @@ import { Menu } from "antd";
 import { getLevelKeys } from "../../utils";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminUser from '../../components/AdminUser/AdminUser';
+import AdminOrder from "../../components/AdminOrder/AdminOrder";
 
 
 export const AdminPage = () => {
@@ -50,7 +51,7 @@ const renderPage = (key) => {
             <AdminProduct/>
         )
         default:
-            return (<AdminUser/>)
+            return (<AdminOrder/>)
     }
 }
   const onOpenChange = (openKeys) => {

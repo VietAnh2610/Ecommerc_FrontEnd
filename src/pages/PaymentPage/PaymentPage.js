@@ -32,13 +32,9 @@ const PaymentPage = () => {
     });
    
   };
-
-
-
   const toggleShowAllProducts = () => {
     setShowAllProducts((prevState) => !prevState);
   };
-  
   const mutationAddOder = UseMutationHooks(async (data) => {
     const { id, token, ...rests } = data;
     try {
