@@ -5,6 +5,7 @@ import TableComponentProduct from "../TableComponentProduct/TableComponentProduc
 import AddUser from "../AddUser/AddUser";
 import TableComponentUser from "../TableComponentProduct/TableComponentUser";
 import TableComponentOrder from "../TableComponentProduct/TableComponentOrder";
+import AddOrder from "../AddOrder/AddOrder";
 
 const AdminOrder = () => {
   const [showAddUser, setShowAddUser] = useState(false);
@@ -22,7 +23,7 @@ const AdminOrder = () => {
       { !showAddUser && (
         <>
           <div className="Admin_user-title d-flex justify-content-between">
-            <h5>Danh sách sản phẩm</h5>
+            <h5>Danh sách đơn hàng</h5>
             <TimeComponent />
           </div>
           <div className="Admin_user_main">
@@ -49,7 +50,7 @@ const AdminOrder = () => {
       )}
       {showAddUser && (
         <div>
-          <AddUser />
+          <AddOrder />
           <button style={{marginTop:10}} className="BackToTable" onClick={handleBackToTable}>Trở về</button>
         </div>
       )}

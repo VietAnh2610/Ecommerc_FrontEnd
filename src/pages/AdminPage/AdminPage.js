@@ -3,16 +3,13 @@ import './AdminPage.scss'
 import {
   AppstoreOutlined,
   UserOutlined,
-  ShoppingCartOutlined ,
+  ShoppingCartOutlined,
   ProfileOutlined
-
 } from "@ant-design/icons";
 import { Menu } from "antd";
-import { getLevelKeys } from "../../utils";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
-
 
 export const AdminPage = () => {
   const items = [
@@ -28,7 +25,7 @@ export const AdminPage = () => {
     },
     {
       key: "order",
-     icon: <ShoppingCartOutlined />,
+      icon: <ShoppingCartOutlined />,
       label: "Quản lý đơn hàng",
     },
     {
@@ -38,51 +35,54 @@ export const AdminPage = () => {
     },
   ];
 
-  const [keySelected, setKeySelected] = useState(""); 
+  const [keySelected, setKeySelected] = useState("user"); // Set default selected key to 'user'
   const [stateOpenKeys, setStateOpenKeys] = useState([]);
-const renderPage = (key) => {
-    switch(key) {
-        case 'user': 
-        return (
-            <AdminUser/>
-        )
-        case 'product': 
-        return (
-            <AdminProduct/>
-        )
-        default:
-            return (<AdminOrder/>)
+
+  const renderPage = (key) => {
+    switch (key) {
+      case 'user':
+        return <AdminUser />;
+      case 'product':
+        return <AdminProduct />;
+      case 'order':
+        return <AdminOrder />;
+      default:
+        return <AdminUser />;
     }
-}
+  }
+
   const onOpenChange = (openKeys) => {
     setStateOpenKeys(openKeys);
   };
 
   const handleOnClick = ({ key }) => {
-    setKeySelected(key); 
+    setKeySelected(key);
   };
-
 
   return (
     <div className="Admin d-flex" style={{ marginTop: 110 }}>
       <Menu
         mode="inline"
-        selectedKeys={[keySelected]} 
+        selectedKeys={[keySelected]}
         openKeys={stateOpenKeys}
         onOpenChange={onOpenChange}
         style={{
-     
-      width:230,
-          height:'auto',
+          width: 230,
+          height: 'auto',
         }}
       >
         {items.map((item) => (
-          <Menu.Item style={{ width:215, color:'white', fontSize: 15, padding:25, fontWeight:500}}  key={item.key} icon={item.icon} onClick={handleOnClick}>
+          <Menu.Item
+            style={{ width: 215, color: 'white', fontSize: 15, padding: 25, fontWeight: 500 }}
+            key={item.key}
+            icon={item.icon}
+            onClick={handleOnClick}
+          >
             {item.label}
           </Menu.Item>
         ))}
       </Menu>
-      <div style={{width:'100%'}} className="admin-content  py-2 px-2">
+      <div style={{ width: '100%' }} className="admin-content py-2 px-2">
         {renderPage(keySelected)}
       </div>
     </div>

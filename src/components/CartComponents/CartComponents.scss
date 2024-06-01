@@ -37,8 +37,9 @@
  }
  .product-btm {
    padding: 10px 10px;
-   border: 1px solid #f0f2f1;
+   border-top: 1px solid #f0f2f1;
    text-align: left;
+   border-radius: 0 0 10px 10px;
  
    > a {
      color: black;

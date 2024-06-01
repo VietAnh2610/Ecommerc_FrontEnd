@@ -162,7 +162,7 @@ const TableComponentUser = () => {
         dataIndex: "avatar",
         key: "avatar",
         render: (avatar) => (
-          <img src={avatar} alt="Avatar" style={{ width: 50, borderRadius: "50%" }} />
+          <img src={avatar} alt="Avatar" style={{ width: 50,height:50, borderRadius: "50%" }} />
         ),
       },
       {

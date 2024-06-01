@@ -1,0 +1,67 @@
+.form-group {
+    .control-label {
+        font-weight: 600;
+        font-size: 14px;
+        padding-bottom: 10px;
+        color: black;
+    }
+    .form-control {
+        background-color: rgb(242, 242, 242);
+        padding: 10px;
+        width: 80%;
+        
+    }
+    .form-control:focus {
+        box-shadow: none;
+        background-color: rgb(242, 242, 242);
+        border: 1px solid #ccc;
+      }
+}
+.button-submit {
+    background-color: rgb(166, 237, 171);
+    width: 80px;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: rgb(2, 122, 8);
+    margin-top: 15px;
+}
+.file-label1 {
+    background-color: rgb(19, 19, 43);
+    display: flex;
+    color: white;
+    width: 120px;
+    align-items: center;
+    margin: 20px 0 30px 0;
+    cursor: pointer;
+    justify-content: center;
+    text-align: center; 
+    padding: 5px 10px;
+    
+    border-radius: 5px;
+    font-size: 14px;
+    p {
+        margin: 0;
+    }
+}
+.error-messages {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.selected-products-list {
+    list-style: none;
+    
+}
+.selected-products-list {
+    padding: 20px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+.selected-products-item {
+    width: 100%;
+}

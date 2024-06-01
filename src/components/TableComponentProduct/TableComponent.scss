@@ -32,7 +32,7 @@
     background-color: transparent;
     border: none;
     position: absolute;
-    font-size: 20px;
+    font-size: 16px;
     color: red;
     margin-left: -25px;
 }
@@ -43,3 +43,29 @@
 .delete_list_user {
     background-color: rgb(247, 196, 195);
 }
+/* styles.css or your CSS file */
+.status-paid, .status-unpaid, .status-delivered, .status-undelivered {
+    display: inline-block;
+    padding: 4px 5px;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+
+  }
+  
+  .status-paid {
+    background-color: green;
+  }
+  
+  .status-unpaid {
+    background-color: rgb(214, 0, 25);
+  }
+  
+  .status-delivered {
+    background-color: green;
+  }
+  
+  .status-undelivered {
+    background-color: rgb(214, 0, 25);
+  }
+  

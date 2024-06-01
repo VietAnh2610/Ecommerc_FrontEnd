@@ -35,3 +35,26 @@ export const getDetailsOrder = async (id,access_token) => {
         throw error;
     }
 };
+
+export const updateOrder = async (userId, orderId, data, access_token) => {
+    try {
+        const res = await axiosJWT.put(`${process.env.REACT_APP_API_KEY}/order/update/${userId}/${orderId}`, data, {
+            headers: {
+                token: `Bearer ${access_token}`,
+            }
+        });
+        return res.data;
+    } catch (error) {
+        console.error('Error', error);
+        throw error;
+    }
+};
+export const deleteOrder = async (userId, orderId, access_token) => {
+    const res = await axiosJWT.delete(`${process.env.REACT_APP_API_KEY}/order/delete/${userId}/${orderId}`, {
+    
+        headers: {
+            token: `Bearer ${access_token}`,
+        }
+    },)
+
+};

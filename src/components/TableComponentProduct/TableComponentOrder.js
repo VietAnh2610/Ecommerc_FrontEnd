@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import OrderDetails from "../OrderDetails/OrderDetails"; // Import component mới
-
+import "./TableComponent.scss";
 const { Option } = Select;
 
 const TableComponentOrder = () => {
@@ -32,6 +32,10 @@ const TableComponentOrder = () => {
       setLoading(true);
       const res = await OrderService.getAllOrder(accessToken);
       setLoading(false);
+      if (res && res.data) {
+        const reversedOrders = res.data.reverse(); // Đảo ngược danh sách đơn hàng
+        return { data: reversedOrders };
+      }
       return res;
     } catch (error) {
       setLoading(false);
@@ -39,7 +43,7 @@ const TableComponentOrder = () => {
       throw error;
     }
   };
-
+  
   const { data: orders, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
@@ -68,6 +72,97 @@ const TableComponentOrder = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
     setIsDetailsVisible(false); // Đóng modal chi tiết
+  };
+
+  const handleDeleteOrder = (userId, orderId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc chắn muốn xóa đơn hàng này?",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk() {
+        DeleteOrder(userId, orderId);
+      },
+    });
+  };
+  
+  const handleDeleteSelectedOrders = (userId, orderId) => {
+    Modal.confirm({
+      title: "Xác nhận xóa",
+      content: "Bạn có chắc chắn muốn xóa các đơn hàng đã chọn?",
+      okText: "Xóa",
+      okType: "danger",
+      cancelText: "Hủy",
+      onOk() {
+        DeleteSelectedOrders(userId, orderId);
+      },
+    });
+  };
+  
+  const DeleteOrder = async (userId,orderId ) => {
+    try {
+  
+      await OrderService.deleteOrder( userId,orderId, accessToken);
+      refetch().then(() => {
+        toast.success("Đã xóa đơn hàng thành công");
+      }); // Refetch xong mới hiển thị toast.success
+    } catch (error) {
+      console.error("Lỗi khi xóa đơn hàng:", error);
+      toast.error("Xóa đơn hàng thất bại");
+    }
+  };
+  const DeleteSelectedOrders = async () => {
+    try {
+      if (selectedRowKeys.length === 0) {
+        toast.error("Vui lòng chọn ít nhất một đơn hàng để xóa");
+        return;
+      }
+  
+      const promises = selectedRowKeys.map(async (orderId) => {
+        const order = orders.data.find((order) => order._id === orderId);
+        if (order) {
+          await OrderService.deleteOrder(order.user, order._id, accessToken);
+        }
+      });
+  
+      await Promise.all(promises);
+  
+      setSelectedRowKeys([]); 
+      refetch().then(() => {
+        toast.success("Đã xóa các đơn hàng đã chọn thành công");
+      });
+    } catch (error) {
+      console.error("Lỗi khi xóa đơn hàng:", error);
+      toast.error("Xóa đơn hàng thất bại");
+    }
+  };
+  
+  
+  const handleSave = async () => {
+    try {
+      if (selectedOrder && accessToken) {
+        const userId = selectedOrder.user;
+        const orderId = selectedOrder._id;
+        const data = {
+          shippingAddress: selectedOrder.shippingAddress,
+          isPaid: selectedOrder.isPaid,
+          isDelivered: selectedOrder.isDelivered,
+        };
+
+        const response = await OrderService.updateOrder(userId, orderId, data, accessToken);
+       
+        setIsModalVisible(false);
+        refetch().then(() => {
+          toast.success("Cập nhật đơn hàng thành công");
+        });
+      } else {
+        toast.error("Invalid order data");
+      }
+    } catch (error) {
+      console.error("Error updating order:", error);
+      toast.error("Failed to update order");
+    }
   };
 
   const columns = [
@@ -109,6 +204,8 @@ const TableComponentOrder = () => {
               return "Ví MoMo";
             case "vnpay":
               return "Thanh toán qua VN Pay";
+              case "paystore":
+              return "Thanh toán tại cửa hàng";
             default:
               return method;
           }
@@ -120,42 +217,68 @@ const TableComponentOrder = () => {
       title: "Trạng thái thanh toán",
       dataIndex: "isPaid",
       key: "isPaid",
-      render: (isPaid) => (isPaid ? "Đã thanh toán" : "Chưa thanh toán"),
+      render: (isPaid) => (
+        <span className={isPaid ? "status-paid" : "status-unpaid"}>
+          {isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+        </span>
+      ),
     },
     {
       title: "Trạng thái giao hàng",
       dataIndex: "isDelivered",
       key: "isDelivered",
-      render: (isDelivered) => (isDelivered ? "Đã giao hàng" : "Chưa giao hàng"),
+      render: (isDelivered) => (
+        <span className={isDelivered ? "status-delivered" : "status-undelivered"}>
+          {isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
+        </span>
+      ),
     },
     {
       title: "Chức năng",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
-        <div className="d-flex">
-          <Button
-            // onClick={() => handleDeleteOrder(record._id)
-            // }
-            style={{ marginRight: 6 }}
-            type="danger"
+        <div style={{ width: 110 }} className="d-flex ">
+          <button
+            onClick={() => handleDeleteOrder(record.user,record._id)}
+            style={{
+              marginRight: 6,
+              backgroundColor
+              : "rgb(247, 196, 195)",
+              border: "none",
+            }}
+            className="btn btn-primary btn-sm trash"
+            title="Xóa"
           >
-            Xóa
-          </Button>
-          <Button
-           style={{ marginRight: 6 }}
+            <i
+              style={{ color: "rgb(222, 4, 0)" }}
+              className="fas fa-trash-alt"
+            ></i>
+          </button>
+          <button
             onClick={() => handleEditOrder(record)}
-            type="primary"
+            style={{ backgroundColor: "rgb(250, 226, 197)", border: "none" }}
+            className="btn btn-primary btn-sm edit"
+            title="Sửa"
+            data-toggle="modal"
+            data-target="#ModalUP"
           >
-            Sửa
-          </Button>
-          <Button
+            <i
+              style={{ color: "rgb(245, 158, 59)" }}
+              className="fas fa-edit"
+            ></i>
+          </button>
+          <button
             onClick={() => handleDetailsOrder(record)}
-            type="primary"
+            style={{ backgroundColor: "rgb(159, 250, 157)", border: "none", marginLeft:6 }}
+            className="btn btn-primary btn-sm edit"
+            title="Chi tiết"
+            data-toggle="modal"
+            data-target="#ModalUP"
           >
-            Chi tiết
-          </Button>
           
+            <i  style={{ color: "var(--text-color)" }} class="fa-regular fa-eye"></i>
+          </button>
         </div>
       ),
     },
@@ -214,7 +337,7 @@ const TableComponentOrder = () => {
           className="delete_list_user"
           type="danger"
           disabled={selectedRowKeys.length === 0}
-          // onClick={() => handleDeleteOrder(null)}
+          onClick={handleDeleteSelectedOrders}
         >
           <i
             style={{ marginRight: 5, color: "rgb(222, 4, 0)" }}
@@ -251,7 +374,7 @@ const TableComponentOrder = () => {
             Hủy
           </Button>,
           <Button key="save" type="primary" 
-          // onClick={handleSave}
+          onClick={handleSave}
           >
             Lưu
           </Button>,

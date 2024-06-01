@@ -8,6 +8,7 @@ import CartComponents from "../../components/CartComponents/CartComponents";
 
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
+  const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: ProductService.getAllProduct,
@@ -30,6 +31,18 @@ const ProductsPage = () => {
 
   const handleTypeClick = (type) => {
     setSelectedType(type === selectedType ? null : type);
+  };
+
+  const handlePriceRangeClick = (priceRange) => {
+    setSelectedPriceRange(priceRange === selectedPriceRange ? null : priceRange);
+  };
+
+  const filterProductsByPriceRange = (product) => {
+    if (!selectedPriceRange) return true;
+  
+    const [minPrice, maxPrice] = selectedPriceRange.split('-');
+    const productPrice = parseFloat(product.price.replace(/\D/g, '')); // Chuyển đổi giá sản phẩm từ chuỗi sang số
+    return productPrice >= parseFloat(minPrice) && productPrice <= parseFloat(maxPrice);
   };
 
   return (
@@ -81,11 +94,48 @@ const ProductsPage = () => {
                   </ul>
                 </div>
               </div>
+
+              <div className="category">
+                <div className="category_title">
+                  <h3>Lọc sản phẩm theo giá</h3>
+                </div>
+                <div>
+                  <ul className="category_list">
+                    <li
+                      className={selectedPriceRange === "0-5000000" ? "active" : ""}
+                      onClick={() => handlePriceRangeClick("0-5000000")}
+                    >
+                      Dưới 5 triệu
+                    </li>
+                    <li
+                      className={selectedPriceRange === "5000000-10000000" ? "active" : ""}
+                      onClick={() => handlePriceRangeClick("5000000-10000000")}
+                    >
+                      Từ 5 triệu đến 10 triệu
+                    </li>
+                    <li
+                      className={selectedPriceRange === "10000000-20000000" ? "active" : ""}
+                      onClick={() => handlePriceRangeClick("10000000-20000000")}
+                    >
+                      Từ 10 triệu đến 20 triệu
+                    </li>
+                    <li
+                      className={selectedPriceRange === "20000000-10000000000" ? "active" : ""}
+                      onClick={() => handlePriceRangeClick("20000000-10000000000")}
+                    >
+                      Trên 20 triệu
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
             <div className="col-lg-9">
               <div className="products row d-flex flex-wrap">
                 {products?.data
-                  ?.filter((product) => selectedType === null || product.type === selectedType)
+                  ?.filter((product) =>
+                    (selectedType === null || product.type === selectedType) &&
+                    filterProductsByPriceRange(product)
+                  )
                   .map((product) => (
                     <CartComponents
                       key={product._id}
