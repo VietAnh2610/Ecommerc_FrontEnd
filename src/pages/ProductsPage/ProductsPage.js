@@ -9,6 +9,7 @@ import CartComponents from "../../components/CartComponents/CartComponents";
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
+  const [searchKeyword, setSearchKeyword] = useState('');
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: ProductService.getAllProduct,
@@ -37,12 +38,22 @@ const ProductsPage = () => {
     setSelectedPriceRange(priceRange === selectedPriceRange ? null : priceRange);
   };
 
+  const handleSearchChange = (e) => {
+    setSearchKeyword(e.target.value);
+  };
+
   const filterProductsByPriceRange = (product) => {
     if (!selectedPriceRange) return true;
-  
+
     const [minPrice, maxPrice] = selectedPriceRange.split('-');
     const productPrice = parseFloat(product.price.replace(/\D/g, '')); // Chuyển đổi giá sản phẩm từ chuỗi sang số
     return productPrice >= parseFloat(minPrice) && productPrice <= parseFloat(maxPrice);
+  };
+
+  const filterProductsBySearchKeyword = (product) => {
+    if (!searchKeyword) return true;
+
+    return product.name.toLowerCase().includes(searchKeyword.toLowerCase());
   };
 
   return (
@@ -70,6 +81,7 @@ const ProductsPage = () => {
           <div className="row">
             <div className="col-lg-3">
               <div className="category">
+             
                 <div className="category_title">
                   <h3>Danh mục sản phẩm</h3>
                 </div>
@@ -82,15 +94,26 @@ const ProductsPage = () => {
                     >
                       Tất cả
                     </li>
+                    
                     {productTypes.map((type) => (
-                      <li
-                        key={type}
-                        className={selectedType === type ? "active" : ""}
-                        onClick={() => handleTypeClick(type)}
-                      >
-                        {type}
-                      </li>
+                        <li
+  
+                          key={type}
+                          className={selectedType === type ? "active" : ""}
+                          onClick={() => handleTypeClick(type)}
+                        >
+                          {type}
+                        </li>
                     ))}
+                     <div style={{marginTop:10}}>
+                    <input 
+                      type="search"
+                      placeholder="Tìm kiếm sản phẩm"
+                      value={searchKeyword}
+                      onChange={handleSearchChange}
+                      className="search-input-product"
+                    />
+                  </div>
                   </ul>
                 </div>
               </div>
@@ -126,6 +149,7 @@ const ProductsPage = () => {
                       Trên 20 triệu
                     </li>
                   </ul>
+                
                 </div>
               </div>
             </div>
@@ -134,7 +158,8 @@ const ProductsPage = () => {
                 {products?.data
                   ?.filter((product) =>
                     (selectedType === null || product.type === selectedType) &&
-                    filterProductsByPriceRange(product)
+                    filterProductsByPriceRange(product) &&
+                    filterProductsBySearchKeyword(product)
                   )
                   .map((product) => (
                     <CartComponents

@@ -163,9 +163,7 @@ const order = useSelector((state) => state.order)
                 </li>
               </ul>
               <form className="d-flex input">
-                <button style={{ marginRight: -13 }} className="btn btn-search" type="submit">
-                  <i className="fa-solid fa-magnifying-glass"></i>
-                </button>
+                
                 <div className="header-right">
                  <Link to="/Order"> <i className="fa-solid fa-cart-shopping"><div className="quantity-cart">{order?.orderItems?.length}</div></i></Link>
                   <i className="fa-regular fa-heart"></i>

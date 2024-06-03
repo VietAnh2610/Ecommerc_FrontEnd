@@ -41,7 +41,37 @@ const ProductDetailComponent = () => {
       return newQuantity < 1 ? 1 : newQuantity; 
     });
   };
-console.log('so luong', quantity)
+
+  const handleAddOrderProduct = () => {
+    if (!user) { // Kiểm tra trạng thái đăng nhập
+      toast.error('Vui lòng đăng nhập để mua sản phẩm');
+      return;
+    }
+
+    if (quantity > product.countInStock) {
+      toast.error('Số lượng sản phẩm vượt quá số lượng trong kho');
+      return;
+    }
+
+    if (product.countInStock = 0) {
+      toast.error('Sản phẩm đã hết hàng');
+      return;
+    }
+
+    dispatch(addOrderProduct({ 
+      orderItem: {
+        name: product?.name,
+        amount: quantity,
+        image: product?.image,
+        price: product?.price,
+        product: product?._id,
+        original_price: product?.original_price,
+      }
+    }));
+
+    toast.success('Sản phẩm đã được thêm vào giỏ hàng');
+  };
+
   if (error) {
     return <div>{error}</div>; 
   }
@@ -50,36 +80,6 @@ console.log('so luong', quantity)
     return <div>Đang tải dữ liệu...</div>;
   }
 
-  const handleAddOrderProduct = () => {
-    if (!user ) { // Kiểm tra trạng thái đăng nhập
-      toast.error('Vui lòng đăng nhập để mua sản phẩm');
-    } else {
-      dispatch(addOrderProduct({ 
-        // name: { type: String, required: true },
-        //     amount: { type: Number, required: true },
-        //     image: { type: String, required: true },
-        //     price: { type: Number, required: true },
-        //     discount: { type: Number },
-        //     product: {
-        //         type: mongoose.Schema.Types.ObjectId,
-        //         ref: 'Product',
-        //         required: true,
-        //     },
-        orderItem:{
-          name: product?.name,
-          amount: quantity,
-          image: product?.image,
-          price: product?.price,
-          product: product?._id,
-          original_price: product?.original_price,
-
-        }
-       }));
-      toast.success('Sản phẩm đã được thêm vào giỏ hàng');
-    }
-  };
-  // const{ data: productDetails} = useQuery(['product-details'], fetchProductDetails)
-// console.log('productDetails',product, user)
   return (
     <div style={{ marginTop: 110 }}>
       <div className="product-detail py-5">
