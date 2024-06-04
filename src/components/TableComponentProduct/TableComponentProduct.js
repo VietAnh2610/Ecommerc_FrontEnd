@@ -181,14 +181,13 @@ const TableComponent = () => {
       render: (image) => (
         <>
           {Array.isArray(image) &&
-            image.map((img, index) => (
+           
               <img
-                key={index}
-                src={img}
-                alt={`ảnh sản phẩm ${index}`}
-                style={{ width: "50px", marginRight: "5px" }}
+                src={image[0]} 
+                alt={"ảnh sản phẩm"}
+                style={{ width: "70px", marginRight: "5px" }}
               />
-            ))}
+            }
         </>
       ),
     },
