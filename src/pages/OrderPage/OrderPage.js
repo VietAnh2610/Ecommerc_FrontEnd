@@ -92,6 +92,31 @@ const CartPage = () => {
     });
   };
 
+  const handleRemoveSelectedProducts = () => {
+    const selectedProductIds = Object.keys(selectedItems).filter(
+      (productId) => selectedItems[productId]
+    );
+
+    if (selectedProductIds.length > 0) {
+      Modal.confirm({
+        title: "Xác nhận",
+        content: "Bạn có chắc chắn muốn xóa các sản phẩm đã chọn không?",
+        onOk() {
+          selectedProductIds.forEach((productId) => {
+            dispatch(removeOrderProduct({ productId }));
+          });
+          setSelectedItems({});
+          setSelectAll(false);
+        },
+      });
+    } else {
+      Modal.warning({
+        title: "Cảnh báo",
+        content: "Không có sản phẩm nào được chọn để xóa.",
+      });
+    }
+  };
+
   const handleToggleSelectAll = () => {
     const updatedSelectAll = !selectAll;
     setSelectAll(updatedSelectAll);
@@ -184,6 +209,12 @@ const CartPage = () => {
                   </div>
                   <p style={{ margin: 0, marginLeft: 15 }}>Chọn tất cả</p>
                 </div>
+                <button
+                  onClick={handleRemoveSelectedProducts}
+                  className="btn-action"
+                >
+                  Xóa sản phẩm đã chọn
+                </button>
               </div>
               {order?.orderItems?.map((orderItem) => {
                 const firstImage = orderItem.image[0];

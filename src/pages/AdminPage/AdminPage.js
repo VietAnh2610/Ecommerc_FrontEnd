@@ -10,6 +10,7 @@ import { Menu } from "antd";
 import AdminProduct from "../../components/AdminProduct/AdminProduct";
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminOrder from "../../components/AdminOrder/AdminOrder";
+import AdminPost from "../../components/AdminPost/AdminPost";
 
 export const AdminPage = () => {
   const items = [
@@ -29,7 +30,7 @@ export const AdminPage = () => {
       label: "Quản lý đơn hàng",
     },
     {
-      key: "blog",
+      key: "post",
       icon: <ProfileOutlined />,
       label: "Quản lý bài viết",
     },
@@ -46,11 +47,12 @@ export const AdminPage = () => {
         return <AdminProduct />;
       case 'order':
         return <AdminOrder />;
+        case 'post':
+          return <AdminPost />;
       default:
         return <AdminUser />;
     }
   }
-
   const onOpenChange = (openKeys) => {
     setStateOpenKeys(openKeys);
   };
