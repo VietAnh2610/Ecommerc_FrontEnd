@@ -1,0 +1,44 @@
+.blog-left {
+    h2{
+        font-size: 23px;
+        // display: block;
+        
+    
+    }
+    >span {
+        display: block;
+        width: 140px;
+        
+        border: 2px solid var(--text-color);
+        margin-bottom: 10px;
+    }
+}
+.blog-right {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    align-items: flex-end;
+    h2{
+        font-size: 23px;
+    }
+    >span {
+        display: block;
+        width: 140px;
+        
+        border: 2px solid var(--text-color);
+        margin-bottom: 20px;
+    }
+    .content-ios {
+        width: 300px;
+        transform: translateY(-80px);
+        color: white;
+        font-size: 14px;
+        padding: 10;
+        display: block;
+        // margin-left: 5px;
+    }
+}
+.aa {
+    // background-color: antiquewhite;
+    height: 180px;
+}
