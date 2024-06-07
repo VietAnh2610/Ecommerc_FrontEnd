@@ -3,6 +3,7 @@ import "./BlogPage.scss";
 import { Link } from "react-router-dom";
 import * as PostService from "../../services/PostService";
 import moment from "moment";
+import FooterComponent from "../../components/FooterComponent/FooterComponent";
 const BlogPage = () => {
 
   const [blogs, setBlogs] = useState([]);
@@ -47,26 +48,28 @@ const BlogPage = () => {
             <h2>TIN TỨC CẬP NHẬT</h2>
             <span></span>
             {blogs.map((post, index) => (
-            <div key={index} className="d-flex justify-content-between py-3">
-              <img
-                style={{ width: "35%", borderRadius: 5, marginRight: 20 , cursor:'pointer'}}
-                src={post.image[0]}
-              />
-              <div style={{cursor:"pointer"}} className="">
-                <h3 style={{ fontSize: 16 }}>
-                  {post.title}
-                </h3>
-                <p>
-                  {post.describe}
-                </p>
-                <div className="d-flex align-items-center">
-                  <span style={{ marginRight: 10, color: "rgb(25, 108, 181)" }}>
-                  {post.author}
-                  </span>
-                  <span style={{color:"#637381", fontSize:14}}><i style={{fontSize:14, marginRight:5}} class="fa-regular fa-clock"></i>{moment(post.createdAt).format("DD/MM/YYYY HH:mm:ss")}</span>
+            <Link to={`/blog/${post._id}`} style={{textDecoration:'none', color:'black'}}>
+              <div key={index} className="d-flex justify-content-between py-3">
+                <img
+                  style={{ width: "35%", borderRadius: 5, marginRight: 20 , cursor:'pointer'}}
+                  src={post.image[0]}
+                />
+                <div style={{cursor:"pointer"}} className="">
+                  <h3 style={{ fontSize: 16 }}>
+                    {post.title}
+                  </h3>
+                  <p>
+                    {post.describe}
+                  </p>
+                  <div className="d-flex align-items-center">
+                    <span style={{ marginRight: 10, color: "rgb(25, 108, 181)" }}>
+                    {post.author}
+                    </span>
+                    <span style={{color:"#637381", fontSize:14}}><i style={{fontSize:14, marginRight:5}} class="fa-regular fa-clock"></i>{moment(post.createdAt).format("DD/MM/YYYY HH:mm:ss")}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
                  ))}
           </div>
           <div
@@ -88,18 +91,21 @@ const BlogPage = () => {
             </div>
             {blogs.map((post, index) => (
             <div style={{ width: "72%" , marginBottom:15}} className="d-flex">
-              <h3 style={{ fontSize: 14 }}>
-                {post.title}
-              </h3>
-              <img
-                style={{ width: "40%", borderRadius: 5 }}
-                src={post.image}
-              ></img>
+              <Link to={`/blog/${post._id}`} style={{display:'flex', textDecoration:'none', color:'black'}}>
+                <h3 style={{ fontSize: 14 }}>
+                  {post.title}
+                </h3>
+                <img
+                  style={{ width: "40%", borderRadius: 5 }}
+                  src={post.image}
+                ></img>
+              </Link>
             </div>
             ))}
           </div>
         </div>
       </div>
+      <FooterComponent/>
     </div>
   );
 };

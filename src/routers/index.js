@@ -10,6 +10,7 @@ import ProfilePage from "../pages/Profile/ProfilePage";
 import { AdminPage } from "../pages/AdminPage/AdminPage";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import OrderManagement from "../pages/OrderManagement/OrderManagement";
+import BlogPageDetails from "../pages/BlogPageDetails/BlogPageDetails";
 const routes  = [
 {
     path: '/',
@@ -34,6 +35,13 @@ const routes  = [
 {
     path: '/product-detail/:id',
     page: ProductDetailComponent,
+    isShowHeader: true
+
+
+},
+{
+    path: '/blog/:id',
+    page: BlogPageDetails,
     isShowHeader: true
 
 
