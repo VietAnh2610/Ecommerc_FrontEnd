@@ -65,7 +65,7 @@ const CartComponents = (props) => {
                 <i className="fa-regular fa-heart"></i>
               </a>
               <a onClick={handleAddCart} >
-                <i onClick={handleAddCart} className="fa-solid fa-cart-plus"></i>
+                <i className="fa-solid fa-cart-plus"></i>
               </a>
             </div>
           </div>
