@@ -105,7 +105,6 @@ const BlogPageDetails = () => {
           </div>
         </div>
       </div>
-      <FooterComponent />
     </div>
   );
 };

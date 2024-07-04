@@ -1,5 +1,6 @@
 header {
-  position: fixed;
+  // position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
@@ -7,11 +8,6 @@ header {
   background-color: #fff; 
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
 }
-
-.navbar-brand > img {
-  font-size: 20px;
-}
-
 .header {
   margin: 0 auto;
 }
@@ -57,9 +53,10 @@ header {
 //top-menu
 .top-menu {
   background-color: rgb(246,246,246);
-height: 30px;
+  height: 30px;
+
 }
-.top-menu-left   {
+.top-menu-left {
 
  padding: 7px 0;
   p {
@@ -252,7 +249,4 @@ li {
   justify-content: center;
   top:10px;
   left: 30px;
-}
-.top-menu{
-  background-color: var();
 }

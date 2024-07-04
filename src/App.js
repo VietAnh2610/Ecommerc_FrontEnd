@@ -9,6 +9,7 @@ import * as UserService from "./services/UserService";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "./redux/counter/userSlide";
 import { ToastContainer } from "react-toastify";
+import FooterComponent from "./components/FooterComponent/FooterComponent";
 
 function App() {
   const user = useSelector((state) => state.user);
@@ -73,6 +74,7 @@ function App() {
             ) : null;
           })}
         </Routes>
+        <FooterComponent />
       </div>
     </Router>
   );

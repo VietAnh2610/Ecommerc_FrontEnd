@@ -229,7 +229,6 @@ const OrderManagement = () => {
           </div>
         </div>
       </div>
-      <FooterComponent />
     </div>
   );
 };

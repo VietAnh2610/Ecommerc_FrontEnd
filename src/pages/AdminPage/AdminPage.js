@@ -62,7 +62,7 @@ export const AdminPage = () => {
   };
 
   return (
-    <div className="Admin d-flex" style={{ marginTop: 110 }}>
+    <div className="Admin d-flex">
       <Menu
         mode="inline"
         selectedKeys={[keySelected]}

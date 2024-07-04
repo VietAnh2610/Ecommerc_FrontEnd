@@ -70,16 +70,14 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     setSelectedAvatar(file);
   };
-  console.log('phon', phone.length)
+  console.log("phon", phone.length);
   const handleUpdate = async () => {
-
     // if (phone.length !== 10) {
 
     //   toast.error("Số điện thoại phải có đúng 10 chữ số.");
     //   return;
     // }
     setIsLoading(true);
-
 
     const avatarBase64 = selectedAvatar
       ? await getBase64(selectedAvatar)
@@ -112,7 +110,7 @@ const ProfilePage = () => {
   };
 
   return (
-    <div style={{ marginTop: 110 }}>
+    <div>
       {isLoading && <LoadingComponent />}
 
       <div className="menu-top d-flex align-items-center ">
@@ -372,7 +370,6 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
-      <FooterComponent />
     </div>
   );
 };

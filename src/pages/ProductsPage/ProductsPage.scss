@@ -5,7 +5,7 @@
     margin-bottom: 10px;
   
     &__title {
-      border-bottom: 1px solid rgb(113, 205, 21);
+      border-bottom: 1px solid rgb(129, 170, 204);
       
       h3 {
         font-size: 20px;
@@ -23,7 +23,7 @@
         margin-top: 10px;
   
         &:hover {
-          color: rgb(113, 205, 21);
+          color: rgb(129, 170, 204);
         }
       }
     }
@@ -100,7 +100,7 @@
  
     }
     .category_list li.active {
-      background-color: rgb(134, 223, 45);
+      background-color: rgb(129, 170, 204);
       color: white
     }
     .search-input-product {

@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
-import './ProductsPage.scss';
+import "./ProductsPage.scss";
 import CartComponents from "../../components/CartComponents/CartComponents";
 
 const ProductsPage = () => {
   const [selectedType, setSelectedType] = useState(null);
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
-  const [searchKeyword, setSearchKeyword] = useState('');
+  const [searchKeyword, setSearchKeyword] = useState("");
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: ProductService.getAllProduct,
@@ -35,7 +35,9 @@ const ProductsPage = () => {
   };
 
   const handlePriceRangeClick = (priceRange) => {
-    setSelectedPriceRange(priceRange === selectedPriceRange ? null : priceRange);
+    setSelectedPriceRange(
+      priceRange === selectedPriceRange ? null : priceRange
+    );
   };
 
   const handleSearchChange = (e) => {
@@ -45,9 +47,12 @@ const ProductsPage = () => {
   const filterProductsByPriceRange = (product) => {
     if (!selectedPriceRange) return true;
 
-    const [minPrice, maxPrice] = selectedPriceRange.split('-');
-    const productPrice = parseFloat(product.price.replace(/\D/g, '')); // Chuyển đổi giá sản phẩm từ chuỗi sang số
-    return productPrice >= parseFloat(minPrice) && productPrice <= parseFloat(maxPrice);
+    const [minPrice, maxPrice] = selectedPriceRange.split("-");
+    const productPrice = parseFloat(product.price.replace(/\D/g, "")); // Chuyển đổi giá sản phẩm từ chuỗi sang số
+    return (
+      productPrice >= parseFloat(minPrice) &&
+      productPrice <= parseFloat(maxPrice)
+    );
   };
 
   const filterProductsBySearchKeyword = (product) => {
@@ -57,7 +62,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <div style={{ marginTop: 110 }}>
+    <div>
       <div className="menu-top d-flex align-items-center">
         <div className="container px-5">
           <div className="banner_content d-md-flex justify-content-between align-items-center">
@@ -81,7 +86,6 @@ const ProductsPage = () => {
           <div className="row">
             <div className="col-lg-3">
               <div className="category">
-             
                 <div className="category_title">
                   <h3>Danh mục sản phẩm</h3>
                 </div>
@@ -94,26 +98,25 @@ const ProductsPage = () => {
                     >
                       Tất cả
                     </li>
-                    
+
                     {productTypes.map((type) => (
-                        <li
-  
-                          key={type}
-                          className={selectedType === type ? "active" : ""}
-                          onClick={() => handleTypeClick(type)}
-                        >
-                          {type}
-                        </li>
+                      <li
+                        key={type}
+                        className={selectedType === type ? "active" : ""}
+                        onClick={() => handleTypeClick(type)}
+                      >
+                        {type}
+                      </li>
                     ))}
-                     <div style={{marginTop:10}}>
-                    <input 
-                      type="search"
-                      placeholder="Tìm kiếm sản phẩm"
-                      value={searchKeyword}
-                      onChange={handleSearchChange}
-                      className="search-input-product"
-                    />
-                  </div>
+                    <div style={{ marginTop: 10 }}>
+                      <input
+                        type="search"
+                        placeholder="Tìm kiếm sản phẩm"
+                        value={searchKeyword}
+                        onChange={handleSearchChange}
+                        className="search-input-product"
+                      />
+                    </div>
                   </ul>
                 </div>
               </div>
@@ -125,41 +128,58 @@ const ProductsPage = () => {
                 <div>
                   <ul className="category_list">
                     <li
-                      className={selectedPriceRange === "0-5000000" ? "active" : ""}
+                      className={
+                        selectedPriceRange === "0-5000000" ? "active" : ""
+                      }
                       onClick={() => handlePriceRangeClick("0-5000000")}
                     >
                       Dưới 5 triệu
                     </li>
                     <li
-                      className={selectedPriceRange === "5000000-10000000" ? "active" : ""}
+                      className={
+                        selectedPriceRange === "5000000-10000000"
+                          ? "active"
+                          : ""
+                      }
                       onClick={() => handlePriceRangeClick("5000000-10000000")}
                     >
                       Từ 5 triệu đến 10 triệu
                     </li>
                     <li
-                      className={selectedPriceRange === "10000000-20000000" ? "active" : ""}
+                      className={
+                        selectedPriceRange === "10000000-20000000"
+                          ? "active"
+                          : ""
+                      }
                       onClick={() => handlePriceRangeClick("10000000-20000000")}
                     >
                       Từ 10 triệu đến 20 triệu
                     </li>
                     <li
-                      className={selectedPriceRange === "20000000-10000000000" ? "active" : ""}
-                      onClick={() => handlePriceRangeClick("20000000-10000000000")}
+                      className={
+                        selectedPriceRange === "20000000-10000000000"
+                          ? "active"
+                          : ""
+                      }
+                      onClick={() =>
+                        handlePriceRangeClick("20000000-10000000000")
+                      }
                     >
                       Trên 20 triệu
                     </li>
                   </ul>
-                
                 </div>
               </div>
             </div>
             <div className="col-lg-9">
               <div className="products row d-flex flex-wrap">
                 {products?.data
-                  ?.filter((product) =>
-                    (selectedType === null || product.type === selectedType) &&
-                    filterProductsByPriceRange(product) &&
-                    filterProductsBySearchKeyword(product)
+                  ?.filter(
+                    (product) =>
+                      (selectedType === null ||
+                        product.type === selectedType) &&
+                      filterProductsByPriceRange(product) &&
+                      filterProductsBySearchKeyword(product)
                   )
                   .map((product) => (
                     <CartComponents
@@ -180,7 +200,6 @@ const ProductsPage = () => {
           </div>
         </div>
       </div>
-      <FooterComponent />
     </div>
   );
 };

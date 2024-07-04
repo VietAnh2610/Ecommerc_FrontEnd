@@ -1,18 +1,27 @@
+.Home-banner {
+  margin-bottom: 40px;
+}
 
-.slick-dots {
+.slick-dots.custom-dots {
+bottom: -20px; 
+display: flex;
+justify-content: center;
+}
 
-    top: 93%;
-   }
-   
-   .slick-dots li {
-     margin: 0 2px;
-   }
-   
-   .slick-dots li button::before {
-     font-size: 10px; 
-    
-   }
+.slick-dots.custom-dots li {
+margin: 0 5px; 
+width: 25px; 
+height: 5px; 
+background-color: #ccc; 
+border-radius: 10px; 
+display: inline-block;
+transition: background-color 0.3s ease;
+}
 
-   .Home-banner img.clicked {
-     border: none;
-   }
+.slick-dots.custom-dots li.slick-active {
+background-color: #333; 
+}
+
+.slick-dots.custom-dots li button {
+display: none; 
+}

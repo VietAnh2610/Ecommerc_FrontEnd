@@ -1,38 +1,86 @@
-
-
-  .Home {
-    margin-top: 110px;
-  }
-
-  .single-feature {
-    margin-top: 30px;
-    padding: 30px 15px;
-    text-align: center;
-    border: 1px solid #eff2f3;
-    margin-bottom: 50px;
-    h3{
-        font-size: 15px;
-        font-weight: 500;
-        text-transform: uppercase;
-        margin-top: 25px;
-    }
+.homepage-itroduce {
+    display: flex;
+    font-size: 15px;
+}
+.img-homepage-intro {
+    margin-top: 3px;
+}
+.text-homepage-intro {
+    
+    margin-left: 15px;
+    display: block;
     p {
-        margin-bottom: 0;
-        margin-top: 10px;
-        
+        font-weight: 500;
+        margin: 0 auto;
+        padding: 0 0 2px 0;
     }
+}
+
+.all-product {
+  width: 150px;
+  height: 50px;
+  display: flex;
+  margin: 0 auto;
+  border: 1px solid black;
+  align-items: center;
+  border-radius: 7px;
+  i{
+      margin-top: -2px;
+      margin-left: 5px;
+      font-size: 16px;
   }
-  .single-feature .title i {
-    color: #4a4a4a;
- margin: 10px 0;
-    font-size: 24px;
-    display: inline-block;
+  p {
+      font-size: 16px;
+      margin-top: 10px;
+      margin-left: 30px;
   }
+}
+.all-product:hover {
+  background-color: rgba(0, 0, 0, 0.8); 
+  color: white;
+}
+
+@media (max-width: 1000px) {
+  .homepage-itroduce {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.text-homepage-products {
+  margin-top: 10px;
+  p{
+      font-size: 19px;
+      font-weight: 400;
+      margin: 0 auto;
+  }
+}
+
+.text-center {
+  font-size: 30px;
+  font-weight: 400;
+  .hihi {
+      font-size: 15px;
+      color: #999999;
+  }
+}
+.hover-product {
+  transition: transform 0.3s ease;
+}
+
+.hover-product:hover {
+  transform: scale(1.06); /* Phóng to ảnh lên 10% */
+}
+
+
 .main_title {
   text-align: center;
-  margin-bottom: 75px;
+  margin-bottom: 50px;
+  margin-top: 20px;
   h2 > span {
-    font-size: 24px;
+    font-size: 30px;
+    font-weight: 400;
     display: block;
     border-bottom: 1px solid #dcd7d7; /* Màu và kiểu gạch ngăn của tiêu đề */
   padding-bottom: 5px; /* Khoảng cách giữa tiêu đề và đoạn văn bản */

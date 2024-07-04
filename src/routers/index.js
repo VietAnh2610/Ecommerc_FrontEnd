@@ -1,5 +1,5 @@
 import OrderPage from "../pages/OrderPage/OrderPage";
-import HomePage from "../pages/HomePage/HomePage"
+import HomePage from "../pages/HomePage/HomePage";
 import ProductsPage from "../pages/ProductsPage/ProductsPage";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProductDetailComponent from "../components/ProductDetailComponent/ProductDetailComponent";
@@ -11,98 +11,96 @@ import { AdminPage } from "../pages/AdminPage/AdminPage";
 import PaymentPage from "../pages/PaymentPage/PaymentPage";
 import OrderManagement from "../pages/OrderManagement/OrderManagement";
 import BlogPageDetails from "../pages/BlogPageDetails/BlogPageDetails";
-const routes  = [
-{
-    path: '/',
+import IntroducePage from "../pages/IntroducePage/IntroducePage";
+import DeliveryPolicyPage from "../pages/PolicyPage/DeliveryPolicyPage";
+import SalesPolicyPage from "../pages/PolicyPage/SalesPolicyPage";
+import ReturnPolicyPage from "../pages/PolicyPage/ReturnPolicyPage";
+const routes = [
+  {
+    path: "/",
     page: HomePage,
-    isShowHeader: true
-
-},
-{
-    path: '/order',
+    isShowHeader: true,
+  },
+  {
+    path: "/order",
     page: OrderPage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/products',
+    isShowHeader: true,
+  },
+  {
+    path: "/products",
     page: ProductsPage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/product-detail/:id',
+    isShowHeader: true,
+  },
+  {
+    path: "/product-detail/:id",
     page: ProductDetailComponent,
-    isShowHeader: true
-
-
-},
-{
-    path: '/blog/:id',
+    isShowHeader: true,
+  },
+  {
+    path: "/blog/:id",
     page: BlogPageDetails,
-    isShowHeader: true
-
-
-},
-{
-    path: '/singin',
+    isShowHeader: true,
+  },
+  {
+    path: "/singin",
     page: SingInPage,
-    isShowHeader: true
+    isShowHeader: true,
+  },
 
-
-},
-
-{
-    path: '/singup',
+  {
+    path: "/singup",
     page: SingUpPage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/Blog',
+    isShowHeader: true,
+  },
+  {
+    path: "/Blog",
     page: BlogPage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/profile-user',
+    isShowHeader: true,
+  },
+  {
+    path: "/profile-user",
     page: ProfilePage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/payment',
+    isShowHeader: true,
+  },
+  {
+    path: "/payment",
     page: PaymentPage,
-    isShowHeader: true
-
-
-},
-{
-    path: '/OrderManagement/:id',
+    isShowHeader: true,
+  },
+  {
+    path: "/OrderManagement/:id",
     page: OrderManagement,
-    isShowHeader: true
-
-
-},
-{
-    path: '/system-admin',
+    isShowHeader: true,
+  },
+  {
+    path: "/system-admin",
     page: AdminPage,
     isShowHeader: true,
-    isPrivate: true
-
-
-},
-{
-    path: '*',
+    isPrivate: true,
+  },
+  {
+    path: "/introduce",
+    page: IntroducePage,
+    isShowHeader: true,
+  },
+  {
+    path: "/returnpolicy",
+    page: ReturnPolicyPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/salespolicy",
+    page: SalesPolicyPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/deliverypolicy",
+    page: DeliveryPolicyPage,
+    isShowHeader: true,
+  },
+  {
+    path: "*",
     page: NotFoundPage,
-
-
-
-},
-]
-export default routes
+  },
+];
+export default routes;

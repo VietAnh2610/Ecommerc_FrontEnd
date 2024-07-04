@@ -1,0 +1,26 @@
+.form-policy h1 {
+    font-size: 30px;
+    font-weight: 500;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.form-policy-second {
+    h2 {
+        font-size: 25px;
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+    p{
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+    ul{
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+}
+
+.form-policy-second:last-child{
+    margin-bottom: 70px;
+}

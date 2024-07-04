@@ -1,85 +1,51 @@
-.singin {
-    width: 100vw;
-    height: auto;
-    background-color: #e9e8e8;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 350px;
-    padding-bottom: 100px;
-    margin-left: 50%;
-    transform: translateX(-50%);
+.signup_header {
+  font-size: 16px;
+  display: flex;
+  p {
+      padding-right: 8px;
   }
-  
-  .input_login  {
-    margin-top: 10px;
-    display: flex;
-    position: relative;
+}
+.heading-bar {
+  font-size: 15px;
+  h1{
+      font-weight: 500;
   }
-  
-  .show-btn {
-    position: absolute;
-    right: 0;
-    top: 10px;
-    cursor: pointer;
+  a{
+      margin-left: 1px;
+      text-decoration: none;
   }
-  
-  .input_login input {
-    margin-top: 15px;
-    width: 100%;
-    border: none;
-    border-bottom: 1px solid #bab7b7;
+}
+.formSignup {
+  max-width: 430px;
+  margin: 0 auto;
+}
+.form-Signup-Input {
+  input {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      padding: 8px 20px;
+      margin: 10px 0;
   }
-  
-  .input_login input:focus {
-    outline: none;
+  span{
+      color: red;
+      margin-left: 5px;
   }
-  
-  .Forgot_password {
-    margin-top: 10px;
-    color: rgb(80, 80, 206);
-    font-size: 13px;
-    cursor: pointer;
-  }
-  
-  .singUp_footer {
-    display: flex;
-    font-size: 13px;
-    margin-top: -5px;
-  }
-  
-  .singUp_footer > p {
-    color: #817e7e;
-    margin-right: 20px;
-  }
-  
-  .singUp_footer > span {
-    color: rgb(80, 80, 206);
-    cursor: pointer;
-  }
-  
-  .Back_singUp i {
-    margin-bottom: 30px;
-    font-size: 20px;
-    color: #817e7e;
-  }
-  .error-message {
-    color: var(--text-color);
-    font-size: 12px;
-    margin-top: 45px;
-    position: absolute;
+  font-size: 14px;
+}
 
+.form-Signup-Input input:focus{
+  outline: none;
+}
+
+.button-signup{
+  background-color: black;
+  width: 100%;
+  height: 45px;
+  color: white;
+  border-radius: 4px;
+  margin: 15px 0;
+  p{
+      font-size: 16px;
   }
-  .err-login {
-    position: absolute;
-  }
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Màu nền với độ mờ */
-    z-index: 9999; /* Đảm bảo lớp này nằm trên mọi nội dung khác */
-  }
-  
+}

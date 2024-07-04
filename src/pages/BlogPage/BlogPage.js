@@ -23,7 +23,7 @@ const BlogPage = () => {
   console.log('blogs',blogs)
 
   return (
-    <div style={{ marginTop: 110 }}>
+    <div>
       <div className="menu-top d-flex align-items-center">
         <div className="container px-5">
           <div className="banner_content d-md-flex justify-content-between align-items-center">
@@ -105,7 +105,6 @@ const BlogPage = () => {
           </div>
         </div>
       </div>
-      <FooterComponent/>
     </div>
   );
 };

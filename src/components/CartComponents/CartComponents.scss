@@ -13,8 +13,8 @@
     
      .p_icon {
        display: flex;
-       transition: 0.5s ease;
-       height: 23%;
+       transition: 0.3s ease;
+       height: 20%;
        border-radius: 15px 15px 0 0;
        
        > a {
@@ -26,7 +26,7 @@
      }
  
      .product-btm .name_product {
-       color: rgb(113, 205, 21);
+       color: rgb(129, 170, 204);
       
      }
    }
@@ -79,7 +79,7 @@
  
  }
    .p_icon {
-     width: 90%;
+     width: 50%;
      height: 0;
      background-color: antiquewhite;
      position: absolute;
@@ -88,7 +88,7 @@
      align-items: center;
      left: 50%;
      transform: translateX(-50%);
-     background-color: rgba(162, 247, 141, 0.7);
+     background-color: rgba(129, 170, 204, 0.7);
      align-items: center;
  
      > a {
@@ -101,8 +101,8 @@
        display: none;
  
        &:hover {
-         background-color: rgb(122, 208, 35);
-         transition: 0.8s ease;
+         background-color: #777777;
+         transition: 0.3s ease;
        }
  
        i {
