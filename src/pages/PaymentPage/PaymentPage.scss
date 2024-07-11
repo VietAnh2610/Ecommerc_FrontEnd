@@ -102,6 +102,15 @@ margin-right: 50px;
     cursor: pointer;
     margin-bottom: 0;
 }
+.info-container {
+    display: flex;
+    flex-direction: column;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between; /* căn chỉnh các phần tử giữa 2 bên */
+    align-items: center; /* căn giữa các phần tử theo chiều dọc */
+  }
 .bottom-bar {
     background-color: #fff;
    width: 600px;

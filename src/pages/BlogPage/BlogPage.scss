@@ -1,44 +1,84 @@
-.blog-left {
-    h2{
-        font-size: 23px;
-        // display: block;
-        
-    
-    }
-    >span {
-        display: block;
-        width: 140px;
-        
-        border: 2px solid var(--text-color);
-        margin-bottom: 10px;
-    }
-}
-.blog-right {
+
+  .blog-left {
+    padding-right: 15px;
+  }
+  
+  .blog-right {
+    padding-left: 15px;
+  }
+  
+  .blog-item {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 10px; /* Thêm khoảng cách giữa các mục tin tức */
+    height: 200px; /* Đặt chiều cao cố định cho các mục tin tức */
+  }
+  
+  .blog-image {
+    width: 40%; /* Đặt chiều rộng cho hình ảnh */
+    height: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều cao của blog-item */
+    border-radius: 5px;
+    margin-right: 20px;
+    object-fit: cover; /* Giữ tỉ lệ ảnh và cắt phần thừa nếu cần */
+    cursor: pointer;
+  }
+  
+  .blog-content {
+    flex: 1;
+    cursor: pointer;
+  }
+  
+  .blog-content h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .blog-content p {
+    overflow: hidden; /* Ẩn phần nội dung tràn */
+    text-overflow: ellipsis; /* Thêm dấu "..." ở cuối phần bị tràn */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Giới hạn số dòng của đoạn văn */
+    -webkit-box-orient: vertical;
+  }
+  
+  .category {
+    margin-bottom: 30px;
+  }
+  
+  .category h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .category-list {
+    list-style: none;
     padding: 0;
-    align-items: flex-end;
-    h2{
-        font-size: 23px;
-    }
-    >span {
-        display: block;
-        width: 140px;
-        
-        border: 2px solid var(--text-color);
-        margin-bottom: 20px;
-    }
-    .content-ios {
-        width: 300px;
-        transform: translateY(-80px);
-        color: white;
-        font-size: 14px;
-        padding: 10;
-        display: block;
-        // margin-left: 5px;
-    }
-}
-.aa {
-    // background-color: antiquewhite;
-    height: 180px;
-}
+  }
+  
+  .category-list li {
+    margin-bottom: 10px;
+  }
+  
+  .category-list li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .featured-news {
+    margin-top: 30px;
+  }
+  
+  .featured-news h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+  
+  .featured-news .d-flex {
+    align-items: center;
+  }
+  
+  .featured-news img {
+    width: 100%;
+    height: auto;
+  }
+  

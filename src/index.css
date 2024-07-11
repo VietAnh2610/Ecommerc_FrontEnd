@@ -12,3 +12,6 @@ body {
   text-decoration: none;
   color: inherit;
 }
+#react-query-devtools-button {
+  display: none;
+}

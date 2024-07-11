@@ -4,16 +4,18 @@ import "./IntroducePage.scss";
 
 const IntroducePage = () => {
   return (
-    <div className="container px-5 form-policy">
+    <div className="container px-4 form-policy">
       <div class="signup_header">
         <Link className="link-homepage" to="/">
           Trang chủ
         </Link>
         <p>/</p>
-        <p style={{ color: "rgb(191, 191, 191)", marginLeft:"10px" }}>Giới thiệu</p>
+        <p style={{ color: "rgb(191, 191, 191)" }}>Giới thiệu</p>
       </div>
 
-      <h1>Giới thiệu</h1>
+      <h1 style={{ marginTop: "1px", fontSize: "30px", fontWeight: "400" }}>
+        Giới thiệu
+      </h1>
 
       <div className="form-policy-second">
         <p>

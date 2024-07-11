@@ -2,23 +2,33 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./ProfilePage.scss";
 import { useDispatch, useSelector } from "react-redux";
-import FooterComponent from "../../components/FooterComponent/FooterComponent";
 import * as UserService from "../../services/UserService";
 import { UseMutationHooks } from "../../hooks/UseMutationHook";
 import { updateUser } from "../../redux/counter/userSlide";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
 import { getBase64 } from "../../utils";
 import { toast } from "react-toastify";
+
 const ProfilePage = () => {
   const user = useSelector((state) => state.user);
   const [email, setEmail] = useState(user?.email || "");
   const [name, setName] = useState(user?.name || "");
   const [nickname, setNickName] = useState(user?.nickname || "");
   const [phone, setPhone] = useState(user?.phone || "");
+  const [specificAddress, setSpecificAddress] = useState(""); // Thêm ô địa chỉ cụ thể
   const [address, setAddress] = useState(user?.address || "");
   const [avatar, setAvatar] = useState(user?.avatar || "");
+  const [gender, setGender] = useState(user?.gender || "");
+  const [dob, setDob] = useState(user?.dob || ""); // Thêm state cho ngày sinh
   const [isLoading, setIsLoading] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [errors, setErrors] = useState({});
+  const [provinces, setProvinces] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [wards, setWards] = useState([]);
+  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedWard, setSelectedWard] = useState("");
   const dispatch = useDispatch();
   const mutation = UseMutationHooks((data) => {
     const { id, access_token, ...rests } = data;
@@ -43,6 +53,102 @@ const ProfilePage = () => {
       console.error("Có lỗi xảy ra khi lấy thông tin người dùng:", error);
     }
   };
+
+  useEffect(() => {
+    fetch("http://localhost:3001/api/locations")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvinces(data.provinces);
+      })
+      .catch((error) => {
+        console.error("Error fetching provinces:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (selectedProvince) {
+      fetch("http://localhost:3001/api/locations")
+        .then((response) => response.json())
+        .then((data) => {
+          setDistricts(
+            data.districts.filter(
+              (district) => district.parent_code === selectedProvince
+            )
+          );
+          setWards([]);
+          setSelectedDistrict("");
+        })
+        .catch((error) => {
+          console.error("Error fetching districts:", error);
+        });
+    }
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetch("http://localhost:3001/api/locations")
+        .then((response) => response.json())
+        .then((data) => {
+          setWards(
+            data.wards.filter((ward) => ward.parent_code === selectedDistrict)
+          );
+        })
+        .catch((error) => {
+          console.error("Error fetching wards:", error);
+        });
+    }
+  }, [selectedDistrict]);
+
+  const updateAddress = (
+    provinceCode,
+    districtCode,
+    wardCode,
+    specificAddress
+  ) => {
+    const selectedProvinceName =
+      provinces.find((p) => p.code === provinceCode)?.name_with_type || "";
+    const selectedDistrictName =
+      districts.find((d) => d.code === districtCode)?.name_with_type || "";
+    const selectedWardName =
+      wards.find((w) => w.code === wardCode)?.name_with_type || "";
+
+    setAddress(
+      `${specificAddress ? specificAddress + ", " : ""}${
+        selectedWardName ? selectedWardName + ", " : ""
+      }${
+        selectedDistrictName ? selectedDistrictName + ", " : ""
+      }${selectedProvinceName}`.replace(/(^[,\s]+)|([,\s]+$)/g, "")
+    );
+  };
+
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validatePhone = (phone) => {
+    const re = /^0\d{9}$/;
+    return re.test(String(phone));
+  };
+
+  const handleValidation = () => {
+    let tempErrors = {};
+    let isValid = true;
+
+    if (!validateEmail(email)) {
+      tempErrors["email"] = "Email không hợp lệ";
+      isValid = false;
+    }
+
+    if (!validatePhone(phone)) {
+      tempErrors["phone"] = "Số điện thoại không hợp lệ";
+      isValid = false;
+    }
+
+    setErrors(tempErrors);
+    return isValid;
+  };
+
   const handlOnchangeEmail = (e) => {
     setEmail(e.target.value);
   };
@@ -56,56 +162,110 @@ const ProfilePage = () => {
   };
 
   const handlOnchangePhone = (e) => {
-    const value = e.target.value;
-    if (/^\d{0,10}$/.test(value)) {
-      setPhone(value);
-    }
-  };
-
-  const handlOnchangeAddress = (e) => {
-    setAddress(e.target.value);
+    setPhone(e.target.value);
   };
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     setSelectedAvatar(file);
   };
-  console.log("phon", phone.length);
+
+  const handleGenderChange = (e) => {
+    setGender(e.target.value);
+  };
+
+  const handleDobChange = (e) => {
+    setDob(e.target.value);
+  };
+
+  const handleSpecificAddressChange = (e) => {
+    setSpecificAddress(e.target.value);
+  };
+
+  const handleProvinceChange = (e) => {
+    const provinceCode = e.target.value;
+    setSelectedProvince(provinceCode);
+    setSelectedDistrict("");
+    setSelectedWard("");
+    updateAddress(provinceCode, "", "", specificAddress);
+  };
+
+  const handleDistrictChange = (e) => {
+    const districtCode = e.target.value;
+    setSelectedDistrict(districtCode);
+    setSelectedWard("");
+    updateAddress(selectedProvince, districtCode, "", specificAddress);
+  };
+
+  const handleWardChange = (e) => {
+    const wardCode = e.target.value;
+    setSelectedWard(wardCode);
+    updateAddress(
+      selectedProvince,
+      selectedDistrict,
+      wardCode,
+      specificAddress
+    );
+  };
+
+  const handlOnchangeAddress = (e) => {
+    const specificAddress = e.target.value;
+    setSpecificAddress(specificAddress);
+    updateAddress(
+      selectedProvince,
+      selectedDistrict,
+      selectedWard,
+      specificAddress
+    );
+  };
+
   const handleUpdate = async () => {
-    // if (phone.length !== 10) {
+    if (handleValidation()) {
+      setIsLoading(true);
 
-    //   toast.error("Số điện thoại phải có đúng 10 chữ số.");
-    //   return;
-    // }
-    setIsLoading(true);
+      const avatarBase64 = selectedAvatar
+        ? await getBase64(selectedAvatar)
+        : null;
 
-    const avatarBase64 = selectedAvatar
-      ? await getBase64(selectedAvatar)
-      : null;
+      const fullAddress = `${specificAddress}, ${
+        selectedWard
+          ? wards.find((w) => w.code === selectedWard)?.name_with_type + ", "
+          : ""
+      }${
+        selectedDistrict
+          ? districts.find((d) => d.code === selectedDistrict)?.name_with_type +
+            ", "
+          : ""
+      }${provinces.find((p) => p.code === selectedProvince)?.name_with_type}`;
 
-    const userData = {
-      id: user?.id,
-      email,
-      name,
-      nickname,
-      phone,
-      address,
-      avatar: avatarBase64 || user?.avatar,
-      access_token: user?.access_token,
-    };
+      const userData = {
+        id: user?.id,
+        email,
+        name,
+        nickname,
+        phone,
+        address: fullAddress,
+        avatar: avatarBase64 || user?.avatar,
+        gender,
+        dob, // Thêm ngày sinh vào dữ liệu người dùng
+        access_token: user?.access_token,
+      };
 
-    try {
-      await UserService.updateUser(
-        userData.id,
-        userData,
-        userData.access_token
-      );
-      await handleGetDetailsUser(user?.id, user?.access_token);
-      toast.success("Cập nhật thông tin thành công!");
-    } catch (error) {
-      console.error("Có lỗi xảy ra khi cập nhật người dùng:", error);
-    } finally {
-      setIsLoading(false);
+      try {
+        await UserService.updateUser(
+          userData.id,
+          userData,
+          userData.access_token
+        );
+        await handleGetDetailsUser(user?.id, user?.access_token);
+        toast.success("Cập nhật thông tin thành công!");
+      } catch (error) {
+        console.error("Có lỗi xảy ra khi cập nhật người dùng:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      toast.error("Vui lòng kiểm tra lại thông tin nhập vào");
     }
   };
 
@@ -113,147 +273,75 @@ const ProfilePage = () => {
     <div>
       {isLoading && <LoadingComponent />}
 
-      <div className="menu-top d-flex align-items-center ">
-        <div className="container px-5">
-          <div class="banner_content d-md-flex justify-content-between align-items-center">
-            <div class="mb-3 mb-md-0">
-              <h2 style={{ fontSize: 27 }}>Thông tin tài khoản</h2>
-              <p>Xem và cập nhật thông tin của bạn tại đây</p>
-            </div>
-            <div class="page_link">
-              <Link className="link" to="/" style={{ textDecoration: "none" }}>
-                Trang chủ
-              </Link>
-              <Link className="link" style={{ textDecoration: "none" }}>
-                Xem hồ sơ
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="container-account">
-        <div className="container px-5 py-3 ">
-          <div className="row ">
-            <div className="col-lg-3 profile-menu ">
-              <div className="profile-menu-avata d-flex align-items-center">
-                <img src="https://salt.tikicdn.com/desktop/img/avatar.png" />
-                <div className="info d-flex flex-column">
-                  Tài khoản của<strong>{name}</strong>
-                </div>
-              </div>
-              <ul className="profile-menu-list">
-                <li>
-                  <i class="fa-regular fa-user"></i>Thông tin tài khoản
-                </li>
-                <li>
-                  <i class="fa-solid fa-cart-shopping"></i>Quản lý đơn hàng
-                </li>
-                <li>
-                  <i class="fa-solid fa-location-dot"></i>Sổ địa chỉ
-                </li>
-                <li>
-                  <i class="fa-solid fa-heart"></i>Sản phẩm yêu thích
-                </li>
-                <li>
-                  <img src="https://frontend.tikicdn.com/_desktop-next/static/img/mycoupon/coupon_code.svg" />
-                  Mã giảm giá
-                </li>
-                <li>
-                  <i class="fa-brands fa-bitcoin"></i>Quản lý xu của tôi
-                </li>
-                <li>
-                  <i class="fa-solid fa-headset"></i>Hỗ trợ khách hàng
-                </li>
-              </ul>
-            </div>
-            <div className="col-lg-9 profile-account  ">
+        <div className="container px-4 py-3">
+          <div className="signup_header">
+            <Link className="link-homepage" to="/">
+              Trang chủ
+            </Link>
+            <p>/</p>
+            <p style={{ color: "rgb(191, 191, 191)" }}>Thông tin</p>
+          </div>
+          <h1
+            style={{
+              fontSize: "30px",
+              fontWeight: "400",
+              marginBottom: "30px",
+            }}
+          >
+            Thông tin cá nhân
+          </h1>
+          <div className="container d-flex justify-content-center align-items-center">
+            <div className="col-lg-6 profile-account">
               <div className="row profile-account">
-                <div style={{ fontSize: 20 }}>Thông tin tài khoản</div>
-                <div style={{ marginTop: 27 }} className="d-flex">
-                  <div className="col-lg-7 profile-account-left ">
-                    <span class="info-title">Thông tin cá nhân</span>
-                    <div style={{ marginTop: 15, marginBottom: -20 }}>
-                      <from>
-                        <div className="from-info d-flex justify-content-between">
-                          <div class="form-avatar">
-                            <div class="styles__StyleAvatar-sc-7twymm-0 iRBxWb">
-                              <div>
-                                <div
-                                  className="avatar-view"
-                                  style={{ overflow: "hidden" }}
-                                >
-                                  {selectedAvatar ? (
-                                    <img
-                                      style={{
-                                        width: 110,
-                                        height: 110,
-                                        borderRadius: "50%",
-                                      }}
-                                      src={URL.createObjectURL(selectedAvatar)}
-                                      alt="Avatar"
-                                    />
-                                  ) : avatar ? (
-                                    <img
-                                      style={{
-                                        width: 110,
-                                        height: 110,
-                                        borderRadius: "50%",
-                                      }}
-                                      src={avatar}
-                                      alt="Avatar"
-                                    />
-                                  ) : (
-                                    <img
-                                      style={{
-                                        width: 60,
-                                        height: 60,
-                                      }}
-                                      src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
-                                    />
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="form-name">
-                            <div className="form-controls">
-                              <label className="input-label">
-                                Họ &amp; Tên
-                              </label>
-
-                              <div className="styles__StyledInput-sc-s5c7xj-5 hisWEc">
-                                <input
-                                  className="input "
-                                  type="search"
-                                  name="fullName"
-                                  maxlength="128"
-                                  placeholder="Thêm họ tên"
-                                  value={name}
-                                  onChange={handlOnchangeName}
-                                />
-                              </div>
-                            </div>
-                            <div className="form-controls">
-                              <label class="input-label">Nickname</label>
-                              <div>
-                                <input
-                                  class="input "
-                                  name="userName"
-                                  maxlength="128"
-                                  placeholder="Thêm nickname"
-                                  type="search"
-                                  value={nickname}
-                                  onChange={handlOnchangeNickName}
-                                />
-                              </div>
-                            </div>
-                          </div>
+                <div style={{ fontSize: 20 }}>
+                  Thông tin tài khoản của <strong>{name}</strong>
+                </div>
+                <div style={{ marginTop: 27 }} className="d-flex flex-column">
+                  <div className="form-avatar mb-4 ">
+                    <div className="styles__StyleAvatar-sc-7twymm-0 iRBxWb">
+                      <div className="d-flex justify-content-center align-items-center">
+                        <div
+                          className="avatar-view"
+                          style={{ overflow: "hidden" }}
+                        >
+                          {selectedAvatar ? (
+                            <img
+                              style={{
+                                width: 110,
+                                height: 110,
+                                borderRadius: "50%",
+                              }}
+                              src={URL.createObjectURL(selectedAvatar)}
+                              alt="Avatar"
+                            />
+                          ) : avatar ? (
+                            <img
+                              style={{
+                                width: 110,
+                                height: 150,
+                                borderRadius: "50%",
+                              }}
+                              src={avatar}
+                              alt="Avatar"
+                            />
+                          ) : (
+                            <img
+                              style={{
+                                width: 60,
+                                height: 60,
+                              }}
+                              src="https://frontend.tikicdn.com/_desktop-next/static/img/account/avatar.png"
+                            />
+                          )}
                         </div>
-                      </from>
+                      </div>
                     </div>
-                    <label htmlFor="avatarInput" className="file-label">
-                      <p> Tải lên ảnh</p>
+                    <label
+                      htmlFor="avatarInput"
+                      className="file-label d-flex justify-content-center align-items-center"
+                    >
+                      <p>Tải lên ảnh</p>
                       <input
                         id="avatarInput"
                         type="file"
@@ -262,109 +350,212 @@ const ProfilePage = () => {
                         className="hidden-input"
                       />
                     </label>
-                    <div class="form-control1">
-                      <label class="input-label">Giới tính</label>
-                      <form>
-                        <input
-                          className="ss"
-                          name="gender"
-                          type="radio"
-                          value="Nam"
-                        />
-                        <span
-                          style={{ marginRight: 20 }}
-                          className="option-gender"
-                        >
-                          Nam
-                        </span>
-                        <input
-                          className="ss"
-                          name="gender"
-                          type="radio"
-                          value="Nữ"
-                        />
-                        <span
-                          style={{ marginRight: 20 }}
-                          className="option-gender"
-                        >
-                          Nữ
-                        </span>
-                        <input
-                          className="ss"
-                          name="gender"
-                          type="radio"
-                          value="Khác"
-                        />
-                        <span
-                          style={{ marginRight: 20 }}
-                          className="option-gender"
-                        >
-                          Khác
-                        </span>
-                      </form>
-                    </div>
-                    <div className="button-accout">
-                      {" "}
-                      <button onClick={handleUpdate} disabled={isLoading}>
-                        {isLoading ? "Đang cập nhật..." : "Cập nhật"}
-                      </button>
+                  </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Họ và tên</label>
+                    <div className="styles__StyledInput-sc-s5c7xj-5 hisWEc">
+                      <input
+                        className="input"
+                        type="text"
+                        name="fullName"
+                        maxLength="128"
+                        placeholder="Thêm họ tên"
+                        value={name}
+                        onChange={handlOnchangeName}
+                      />
                     </div>
                   </div>
-                  <div className="col-lg-5 profile-account-right">
-                    <span class="info-title">Số điện thoại và email</span>
-                    <div className="account-right-top">
-                      <div className="account-right-top-SDT d-flex">
-                        <div className="account-right-top-SDT-info">
-                          <i class="fa-solid fa-phone"></i>
-                          <div className="info-account ">
-                            <label>Số điện thoại</label>
-                            <input
-                              type="search"
-                              placeholder="Cập nhật SDT"
-                              value={phone}
-                              maxLength="10"
-                              onChange={handlOnchangePhone}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="account-right-top-SDT d-flex">
-                        <div className="account-right-top-SDT-info">
-                          <i class="fa-solid fa-envelope"></i>
-                          <div className="info-account">
-                            <label>Email</label>
-                            <input
-                              onChange={handlOnchangeEmail}
-                              value={email}
-                              style={{ width: 230 }}
-                              type="search"
-                              placeholder="Cập nhật Email"
-                            />
-                          </div>
-                        </div>
-                      </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Nickname</label>
+                    <div>
+                      <input
+                        className="input"
+                        name="userName"
+                        maxLength="128"
+                        placeholder="Thêm nickname"
+                        type="text"
+                        value={nickname}
+                        onChange={handlOnchangeNickName}
+                      />
                     </div>
-                    <span class="info-title">Địa chỉ</span>
-                    <div
-                      style={{ border: "none" }}
-                      className="account-right-top-SDT d-flex"
-                    >
-                      <div className="account-right-top-SDT-info">
-                        <i class="fa-solid fa-location-dot"></i>
-                        <div className="info-account">
-                          <label>Số địa chỉ</label>
-                          <input
-                            style={{ width: 230 }}
-                            type="search"
-                            placeholder="Cập nhật địa chỉ"
-                            value={address}
-                            onChange={handlOnchangeAddress}
-                          />
-                        </div>
-                      </div>
+                  </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Ngày sinh</label>
+                    <div>
+                      <input
+                        className="input"
+                        name="dob"
+                        type="date"
+                        value={dob}
+                        onChange={handleDobChange}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Giới tính</label>
+                    <form>
+                      <input
+                        className="ss"
+                        name="gender"
+                        type="radio"
+                        value="Nam"
+                        checked={gender === "Nam"}
+                        onChange={handleGenderChange}
+                      />
+                      <span
+                        style={{ marginRight: 20 }}
+                        className="option-gender"
+                      >
+                        Nam
+                      </span>
+                      <input
+                        className="ss"
+                        name="gender"
+                        type="radio"
+                        value="Nữ"
+                        checked={gender === "Nữ"}
+                        onChange={handleGenderChange}
+                      />
+                      <span
+                        style={{ marginRight: 20 }}
+                        className="option-gender"
+                      >
+                        Nữ
+                      </span>
+                      <input
+                        className="ss"
+                        name="gender"
+                        type="radio"
+                        value="Khác"
+                        checked={gender === "Khác"}
+                        onChange={handleGenderChange}
+                      />
+                      <span
+                        style={{ marginRight: 40 }}
+                        className="option-gender"
+                      >
+                        Khác
+                      </span>
+                    </form>
+                  </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Số điện thoại</label>
+                    <div className="styles__StyledInput-sc-s5c7xj-5 hisWEc">
+                      <input
+                        className="input"
+                        type="text"
+                        name="phone"
+                        maxLength="10"
+                        placeholder="Cập nhật SDT"
+                        value={phone}
+                        onChange={handlOnchangePhone}
+                      />
+                    </div>
+                  </div>
+                  <div className="form-controls mb-3">
+                    <label className="input-label">Email</label>
+                    <div className="styles__StyledInput-sc-s5c7xj-5 hisWEc">
+                      <input
+                        className="input"
+                        type="text"
+                        name="email"
+                        placeholder="Cập nhật Email"
+                        value={email}
+                        onChange={handlOnchangeEmail}
+                      />
                     </div>
                   </div>
                 </div>
+
+                <div className="container">
+                  <div className="address-container">
+                    <div className="form-policy-secondd">
+                      <select
+                        className="custom-select"
+                        value={selectedProvince}
+                        onChange={handleProvinceChange}
+                      >
+                        <option value="">Chọn tỉnh</option>
+                        {provinces.map((province) => (
+                          <option key={province.code} value={province.code}>
+                            {province.name_with_type}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {selectedProvince && (
+                      <div  style={{marginLeft:"-110px"}} className="form-policy-secondd">
+                        <select
+                          className="custom-select"
+                          value={selectedDistrict}
+                          onChange={handleDistrictChange}
+                        >
+                          <option value="">Chọn quận huyện</option>
+                          {districts.map((district) => (
+                            <option key={district.code} value={district.code}>
+                              {district.name_with_type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  </div>
+
+                  {selectedDistrict && (
+                    <div className="address-container">
+                      <div className="form-policy-secondd">
+                        <select
+                          className="custom-select"
+                          value={selectedWard}
+                          onChange={handleWardChange}
+                        >
+                          <option value="">Chọn xã phường</option>
+                          {wards.map((ward) => (
+                            <option key={ward.code} value={ward.code}>
+                              {ward.name_with_type}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="form-policy-secondd">
+                        <input
+                          className="custom-input"
+                          type="text"
+                          placeholder="Số nhà, đường, ..."
+                          value={specificAddress}
+                          onChange={handlOnchangeAddress}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="form-controls mb-3">
+                  <label className="input-label">Địa chỉ</label>
+                  <div className="styles__StyledInput-sc-s5c7xj-5 hisWEc">
+                    <input
+                      className="input"
+                      type="text"
+                      name="specificAddress"
+                      placeholder="Số nhà, đường, ..."
+                      value={address} // Hiển thị địa chỉ đã cập nhật
+                      onChange={handlOnchangeAddress}
+                    />
+                  </div>
+                </div>
+              </div>
+              {errors["email"] && (
+                <p className="error-text">{errors["email"]}</p>
+              )}
+              {errors["phone"] && (
+                <p className="error-text">{errors["phone"]}</p>
+              )}
+              <div className="button-accout text-center">
+                <button onClick={handleUpdate} disabled={isLoading}>
+                  {isLoading ? "Đang cập nhật..." : "Cập nhật"}
+                </button>
               </div>
             </div>
           </div>

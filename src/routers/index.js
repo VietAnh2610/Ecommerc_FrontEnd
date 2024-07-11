@@ -15,6 +15,7 @@ import IntroducePage from "../pages/IntroducePage/IntroducePage";
 import DeliveryPolicyPage from "../pages/PolicyPage/DeliveryPolicyPage";
 import SalesPolicyPage from "../pages/PolicyPage/SalesPolicyPage";
 import ReturnPolicyPage from "../pages/PolicyPage/ReturnPolicyPage";
+import LocationPage from "../pages/LocationPage/LocationPage";
 const routes = [
   {
     path: "/",
@@ -24,6 +25,11 @@ const routes = [
   {
     path: "/order",
     page: OrderPage,
+    isShowHeader: true,
+  },
+  {
+    path: "/location",
+    page: LocationPage,
     isShowHeader: true,
   },
   {

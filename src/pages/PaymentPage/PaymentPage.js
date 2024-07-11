@@ -7,7 +7,11 @@ import { UseMutationHooks } from "../../hooks/UseMutationHook";
 import * as OrderService from "../../services/OrderService";
 import { toast } from "react-toastify";
 import LoadingComponent from "../../components/LoadingComponent/LoadingComponent";
-import { clearPurchasedProducts, clearOrder, clearCart } from "../../redux/counter/orderSlice";
+import {
+  clearPurchasedProducts,
+  clearOrder,
+  clearCart,
+} from "../../redux/counter/orderSlice";
 
 const PaymentPage = () => {
   const location = useLocation();
@@ -17,9 +21,9 @@ const PaymentPage = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
   const [payment, setPaymentMethod] = useState("cash");
   const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const handlePayment = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     mutationAddOder.mutate({
       token: user?.access_token,
       orderItems: selectedProducts,
@@ -30,7 +34,6 @@ const PaymentPage = () => {
       totalPrice: total,
       user: user?.id,
     });
-   
   };
   const toggleShowAllProducts = () => {
     setShowAllProducts((prevState) => !prevState);
@@ -39,24 +42,22 @@ const PaymentPage = () => {
     const { id, token, ...rests } = data;
     try {
       const response = await OrderService.createOrder(rests, token);
-      toast.success('Đặt hàng thành công');
+      toast.success("Đặt hàng thành công");
       dispatch(clearOrder());
       dispatch(clearPurchasedProducts());
       navigate(`/OrderManagement/${user?.id}`);
       return response;
     } catch (error) {
-      toast.error('Đặt hàng thất bại');
+      toast.error("Đặt hàng thất bại");
       throw error;
     } finally {
       setIsLoading(false);
     }
   });
 
-
-
   return (
     <div>
-    { isLoading &&  <LoadingComponent/>}
+      {isLoading && <LoadingComponent />}
       <div className="payment-page">
         <div className="container px-5 py-2">
           <div className="payment-page">
@@ -69,7 +70,9 @@ const PaymentPage = () => {
               </div>
             </div>
             <div className="payment-body">
-              {selectedProducts.slice(0, showAllProducts ? selectedProducts.length : 1).map((product) => {
+              {selectedProducts
+                .slice(0, showAllProducts ? selectedProducts.length : 1)
+                .map((product) => {
                   const firstImage = product.image[0];
                   const imageUrl = `${firstImage}`;
                   return (
@@ -151,7 +154,7 @@ const PaymentPage = () => {
                     <p style={{ marginTop: -2, marginLeft: 5 }}>{user.name}</p>
                   </div>
                   <div className="d-flex">
-                    <p className="title-info">SDT:</p>
+                    <p className="title-info">Số điện thoại:</p>
                     <p style={{ marginTop: -2, marginLeft: 5 }}>{user.phone}</p>
                   </div>
                 </div>
@@ -159,15 +162,15 @@ const PaymentPage = () => {
                   style={{ borderBottom: "1px solid rgb(228, 232, 235)" }}
                   className="d-flex justify-content-between"
                 >
-                  <div>
-                    <p className="title-info">Email</p>
-                    <p>{user.email}</p>
-                  </div>
-                  <div className="d-flex flex-column">
-                    <p style={{ float: "left" }} className="title-info">
-                      Địa chỉ
-                    </p>
-                    <p>{user.address}</p>
+                  <div className="info-container">
+                    <div className="info-row">
+                      <p className="title-info">Email:</p>
+                      <p>{user.email}</p>
+                    </div>
+                    <div className="info-row">
+                      <p className="title-info">Địa chỉ:</p>
+                      <p style={{marginLeft: 15 }}>{user.address}</p>
+                    </div>
                   </div>
                 </div>
                 <Link to="/profile-user" style={{ textDecoration: "none" }}>
@@ -186,7 +189,10 @@ const PaymentPage = () => {
                 <Radio value="momo">Ví Momo</Radio>
               </Radio.Group>
             </div>
-            <div style={{ width: 600 }} className="bottom-bar container mt-auto">
+            <div
+              style={{ width: 600 }}
+              className="bottom-bar container mt-auto"
+            >
               <div className="total-box d-flex justify-content-between align-items-start">
                 <p style={{ fontWeight: 600 }} className="title-temp">
                   Tổng tiền tạm tính:

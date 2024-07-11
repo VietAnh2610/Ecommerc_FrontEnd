@@ -149,7 +149,7 @@ const CartPage = () => {
     return total;
   };
 
-  const formattedTotal = (calculateTotal() * 1000000).toLocaleString("vi-VN", {
+  const formattedTotal = (calculateTotal() * 1000).toLocaleString("vi-VN", {
     style: "currency",
     currency: "VND",
     minimumFractionDigits: 0,

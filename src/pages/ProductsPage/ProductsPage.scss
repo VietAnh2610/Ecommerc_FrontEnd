@@ -1,5 +1,5 @@
 .category {
-    padding: 20px 30px;
+    padding: 20px 20px;
     border: 1px solid #f0f2f1;
     border-radius: 20px;
     margin-bottom: 10px;
@@ -29,15 +29,15 @@
     }
   }
   
-  .products {
+  .imageproduct {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    padding: 20px 0 0 5px;
   }
   
-  .menu-top {
-    min-height: 200px;
-    background-color: rgb(246, 246, 246);
-    width: 100%;
+  .imageproduct img {
+    max-width: 100%;
+    height: auto;
   }
   
   .page_link {
@@ -109,3 +109,31 @@
       border: 1px solid #f0f2f1;
       border-radius: 5px;
     }
+
+    .pagination {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+    
+    .page-button {
+      width: 35px;
+      height: 35px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 50%;
+      background-color: #f1f1f1;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    
+      &:hover {
+        background-color: #ddd;
+      }
+    
+      &.active {
+        background-color: rgb(129, 170, 204);
+        color: white;
+      }
+    }
+    
+    

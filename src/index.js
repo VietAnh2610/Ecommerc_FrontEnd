@@ -10,12 +10,8 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import $ from "jquery";
 import Popper from "popper.js";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import {
-
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +21,7 @@ root.render(
     <Provider store={store}>
       <App />
     </Provider>
-    <ReactQueryDevtools initialIsOpen={false} />
+    {/* <ReactQueryDevtools initialIsOpen={false} /> */}
   </QueryClientProvider>
 );
 

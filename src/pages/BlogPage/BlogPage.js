@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import * as PostService from "../../services/PostService";
 import moment from "moment";
 import FooterComponent from "../../components/FooterComponent/FooterComponent";
-const BlogPage = () => {
 
+const BlogPage = () => {
   const [blogs, setBlogs] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 5;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -14,94 +16,133 @@ const BlogPage = () => {
         const data = await PostService.getAllPosts();
         setBlogs(data.data);
       } catch (error) {
-        console.error('Error fetching blogs:', error);
+        console.error("Error fetching blogs:", error);
       }
     };
 
     fetchData();
   }, []);
-  console.log('blogs',blogs)
+  console.log("blogs", blogs);
+
+  // Get current posts
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = blogs.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div>
       <div className="menu-top d-flex align-items-center">
-        <div className="container px-5">
-          <div className="banner_content d-md-flex justify-content-between align-items-center">
-            <div className="mb-3 mb-md-0">
-              <h2 style={{ fontSize: 27 }}>Danh mục bài viết</h2>
-              <p>Khám phá tin tức mới nhất</p>
-            </div>
-            <div className="page_link">
-              <Link className="link" to="/" style={{ textDecoration: "none" }}>
-                Trang chủ
-              </Link>
-              <Link className="link" style={{ textDecoration: "none" }}>
-                Tin tức
-              </Link>
-            </div>
+        <div className="container px-4">
+          <div className="signup_header">
+            <Link className="link-homepage" to="/">
+              Trang chủ
+            </Link>
+            <p>/</p>
+            <p style={{ color: "rgb(191, 191, 191)" }}>Sản phẩm</p>
           </div>
         </div>
       </div>
-      <div className="container py-5 px-5">
+      <h1 style={{ marginTop: "1px", fontSize: "30px", fontWeight: "400" }}>
+        Tin tức cập nhật
+      </h1>
+      <div className="container py-3 px-5">
         <div className="row">
-          <div style={{ padding: 0 }} className="blog-left col-md-8 ">
-            <h2>TIN TỨC CẬP NHẬT</h2>
-            <span></span>
-            {blogs.map((post, index) => (
-            <Link to={`/blog/${post._id}`} style={{textDecoration:'none', color:'black'}}>
-              <div key={index} className="d-flex justify-content-between py-3">
-                <img
-                  style={{ width: "35%", borderRadius: 5, marginRight: 20 , cursor:'pointer'}}
-                  src={post.image[0]}
-                />
-                <div style={{cursor:"pointer"}} className="">
-                  <h3 style={{ fontSize: 16 }}>
-                    {post.title}
-                  </h3>
-                  <p>
-                    {post.describe}
-                  </p>
-                  <div className="d-flex align-items-center">
-                    <span style={{ marginRight: 10, color: "rgb(25, 108, 181)" }}>
-                    {post.author}
-                    </span>
-                    <span style={{color:"#637381", fontSize:14}}><i style={{fontSize:14, marginRight:5}} class="fa-regular fa-clock"></i>{moment(post.createdAt).format("DD/MM/YYYY HH:mm:ss")}</span>
+          <div style={{ padding: 0 }} className="blog-left col-md-9 ">
+            {currentPosts.map((post, index) => (
+              <Link
+                to={`/blog/${post._id}`}
+                style={{ textDecoration: "none", color: "black" }}
+                key={index}
+              >
+                <div className="d-flex blog-item py-3">
+                  <img className="blog-image" src={post.image[0]} alt="post" />
+                  <div className="blog-content">
+                    <h3>{post.title}</h3>
+                    <p>{post.describe}</p>
+                    <div className="d-flex align-items-center">
+                      <span
+                        style={{ marginRight: 10, color: "rgb(25, 108, 181)" }}
+                      >
+                        {post.author}
+                      </span>
+                      <span style={{ color: "#637381", fontSize: 14 }}>
+                        <i
+                          style={{ fontSize: 14, marginRight: 5 }}
+                          className="fa-regular fa-clock"
+                        ></i>
+                        {moment(post.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-                 ))}
-          </div>
-          <div
-            style={{ padding: 0 }}
-            className="col-md-4  blog-right "
-          >
-            <h2 style={{ marginRight: 100 }}>Xem nhiều tuần qua</h2>
-            <span style={{ marginRight: 160 }}></span>
-            
-            <div className="aa">
-              <img
-                style={{ width: 300 }}
-                src="https://cdn-media.sforum.vn/storage/app/media/Photo/2024/trannghia/iOS-17-5.jpeg"
-              ></img>
-              <p style={{ paddingLeft: 7 }} className="content-ios">
-                Apple chính thức phát hành iOS 17.5 với phát hiện phụ kiện theo
-                dõi đa nền tảng, tải ứng dụng từ trang web,...
-              </p>
-            </div>
-            {blogs.map((post, index) => (
-            <div style={{ width: "72%" , marginBottom:15}} className="d-flex">
-              <Link to={`/blog/${post._id}`} style={{display:'flex', textDecoration:'none', color:'black'}}>
-                <h3 style={{ fontSize: 14 }}>
-                  {post.title}
-                </h3>
-                <img
-                  style={{ width: "40%", borderRadius: 5 }}
-                  src={post.image}
-                ></img>
               </Link>
-            </div>
             ))}
+            <div className="pagination">
+              {[...Array(Math.ceil(blogs.length / postsPerPage)).keys()].map(
+                (number) => (
+                  <button
+                    key={number}
+                    className={`page-button ${
+                      currentPage === number + 1 ? "active" : ""
+                    }`}
+                    onClick={() => paginate(number + 1)}
+                  >
+                    {number + 1}
+                  </button>
+                )
+              )}
+            </div>
+          </div>
+          <div className="blog-right col-md-3">
+            <div className="category">
+              <h3>DANH MỤC</h3>
+              <ul className="category-list">
+                <li>
+                  <Link to="/">Trang chủ</Link>
+                </li>
+                <li>
+                  <Link to="/products">Sản phẩm</Link>
+                </li>
+                <li>
+                  <Link to="/location">Hệ thống cửa hàng</Link>
+                </li>
+                <li>
+                  <Link to="/introduce">Giới thiệu</Link>
+                </li>
+                <li>
+                  <Link to="/blog">Tin tức</Link>
+                </li>
+              </ul>
+            </div>
+            <div className="featured-news">
+              <h3>TIN NỔI BẬT</h3>
+              {blogs.slice(0, 4).map((post, index) => (
+                <Link
+                  to={`/blog/${post._id}`}
+                  style={{ textDecoration: "none", color: "black" }}
+                  key={index}
+                >
+                  <div className="d-flex py-2">
+                    <img
+                      style={{
+                        width: "30%",
+                        borderRadius: 5,
+                        marginRight: 10,
+                        cursor: "pointer",
+                      }}
+                      src={post.image[0]}
+                      alt="featured"
+                    />
+                    <div style={{ cursor: "pointer" }}>
+                      <h4 style={{ fontSize: 14 }}>{post.title}</h4>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

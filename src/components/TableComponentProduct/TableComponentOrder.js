@@ -4,8 +4,9 @@ import * as OrderService from "../../services/OrderService";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
-import OrderDetails from "../OrderDetails/OrderDetails"; // Import component mới
+import OrderDetails from "../OrderDetails/OrderDetails";
 import "./TableComponent.scss";
+
 const { Option } = Select;
 
 const TableComponentOrder = () => {
@@ -14,7 +15,7 @@ const TableComponentOrder = () => {
   const [pageSize, setPageSize] = useState(10);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDetailsVisible, setIsDetailsVisible] = useState(false); // State mới
+  const [isDetailsVisible, setIsDetailsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [accessToken, setAccessToken] = useState("");
@@ -33,7 +34,7 @@ const TableComponentOrder = () => {
       const res = await OrderService.getAllOrder(accessToken);
       setLoading(false);
       if (res && res.data) {
-        const reversedOrders = res.data.reverse(); // Đảo ngược danh sách đơn hàng
+        const reversedOrders = res.data.reverse();
         return { data: reversedOrders };
       }
       return res;
@@ -43,7 +44,7 @@ const TableComponentOrder = () => {
       throw error;
     }
   };
-  
+
   const { data: orders, refetch } = useQuery({
     queryKey: ["orders"],
     queryFn: fetchOrders,
@@ -71,7 +72,7 @@ const TableComponentOrder = () => {
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setIsDetailsVisible(false); // Đóng modal chi tiết
+    setIsDetailsVisible(false);
   };
 
   const handleDeleteOrder = (userId, orderId) => {
@@ -86,7 +87,7 @@ const TableComponentOrder = () => {
       },
     });
   };
-  
+
   const handleDeleteSelectedOrders = (userId, orderId) => {
     Modal.confirm({
       title: "Xác nhận xóa",
@@ -99,36 +100,36 @@ const TableComponentOrder = () => {
       },
     });
   };
-  
-  const DeleteOrder = async (userId,orderId ) => {
+
+  const DeleteOrder = async (userId, orderId) => {
     try {
-  
-      await OrderService.deleteOrder( userId,orderId, accessToken);
+      await OrderService.deleteOrder(userId, orderId, accessToken);
       refetch().then(() => {
         toast.success("Đã xóa đơn hàng thành công");
-      }); // Refetch xong mới hiển thị toast.success
+      });
     } catch (error) {
       console.error("Lỗi khi xóa đơn hàng:", error);
       toast.error("Xóa đơn hàng thất bại");
     }
   };
+
   const DeleteSelectedOrders = async () => {
     try {
       if (selectedRowKeys.length === 0) {
         toast.error("Vui lòng chọn ít nhất một đơn hàng để xóa");
         return;
       }
-  
+
       const promises = selectedRowKeys.map(async (orderId) => {
         const order = orders.data.find((order) => order._id === orderId);
         if (order) {
           await OrderService.deleteOrder(order.user, order._id, accessToken);
         }
       });
-  
+
       await Promise.all(promises);
-  
-      setSelectedRowKeys([]); 
+
+      setSelectedRowKeys([]);
       refetch().then(() => {
         toast.success("Đã xóa các đơn hàng đã chọn thành công");
       });
@@ -137,8 +138,7 @@ const TableComponentOrder = () => {
       toast.error("Xóa đơn hàng thất bại");
     }
   };
-  
-  
+
   const handleSave = async () => {
     try {
       if (selectedOrder && accessToken) {
@@ -147,11 +147,16 @@ const TableComponentOrder = () => {
         const data = {
           shippingAddress: selectedOrder.shippingAddress,
           isPaid: selectedOrder.isPaid,
-          isDelivered: selectedOrder.isDelivered,
+          isDelivered: selectedOrder.isPaid ? false : selectedOrder.isDelivered,
         };
 
-        const response = await OrderService.updateOrder(userId, orderId, data, accessToken);
-       
+        const response = await OrderService.updateOrder(
+          userId,
+          orderId,
+          data,
+          accessToken
+        );
+
         setIsModalVisible(false);
         refetch().then(() => {
           toast.success("Cập nhật đơn hàng thành công");
@@ -179,7 +184,9 @@ const TableComponentOrder = () => {
       render: (orderItems) => (
         <>
           {orderItems.map((item, index) => (
-            <div key={index}>{item.name} <strong>X{item.amount}</strong></div>
+            <div key={index}>
+              {item.name} <strong>X{item.amount}</strong>
+            </div>
           ))}
         </>
       ),
@@ -190,7 +197,7 @@ const TableComponentOrder = () => {
       key: "totalPrice",
       render: (totalPrice) => `${totalPrice}`,
       sorter: (a, b) => a.totalPrice - b.totalPrice,
-    }, 
+    },
     {
       title: "Phương thức thanh toán",
       dataIndex: "paymentMethod",
@@ -204,7 +211,7 @@ const TableComponentOrder = () => {
               return "Ví MoMo";
             case "vnpay":
               return "Thanh toán qua VN Pay";
-              case "paystore":
+            case "paystore":
               return "Thanh toán tại cửa hàng";
             default:
               return method;
@@ -214,37 +221,55 @@ const TableComponentOrder = () => {
       },
     },
     {
-      title: "Trạng thái thanh toán",
+      title: "Trạng thái đơn hàng",
       dataIndex: "isPaid",
       key: "isPaid",
-      render: (isPaid) => (
-        <span className={isPaid ? "status-paid" : "status-unpaid"}>
-          {isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
-        </span>
-      ),
+      render: (isPaid, record) => {
+        if (isPaid && !record.isDelivered) {
+          record.isDelivered = false;
+        }
+        return (
+          <span className={isPaid ? "status-paid" : "status-unpaid"}>
+            {isPaid ? "Đã xác nhận" : "Chưa xác nhận"}
+          </span>
+        );
+      },
     },
     {
-      title: "Trạng thái giao hàng",
+      title: "Tình trạng vận chuyển",
       dataIndex: "isDelivered",
       key: "isDelivered",
-      render: (isDelivered) => (
-        <span className={isDelivered ? "status-delivered" : "status-undelivered"}>
-          {isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
-        </span>
-      ),
+      render: (isDelivered, record) => {
+        if (record.isPaid && !isDelivered) {
+          return (
+            <span
+              style={{ backgroundColor: "#ff7f50" }}
+              className="status-undelivered"
+            >
+              Đang giao hàng
+            </span>
+          );
+        }
+        return (
+          <span
+            className={isDelivered ? "status-delivered" : "status-undelivered"}
+          >
+            {isDelivered ? "Đã nhận hàng" : "Chưa giao hàng"}
+          </span>
+        );
+      },
     },
     {
       title: "Chức năng",
       dataIndex: "operation",
       key: "operation",
       render: (_, record) => (
-        <div style={{ width: 110 }} className="d-flex ">
+        <div style={{ width: 110 }} className="d-flex">
           <button
-            onClick={() => handleDeleteOrder(record.user,record._id)}
+            onClick={() => handleDeleteOrder(record.user, record._id)}
             style={{
               marginRight: 6,
-              backgroundColor
-              : "rgb(247, 196, 195)",
+              backgroundColor: "rgb(247, 196, 195)",
               border: "none",
             }}
             className="btn btn-primary btn-sm trash"
@@ -270,14 +295,20 @@ const TableComponentOrder = () => {
           </button>
           <button
             onClick={() => handleDetailsOrder(record)}
-            style={{ backgroundColor: "rgb(159, 250, 157)", border: "none", marginLeft:6 }}
+            style={{
+              backgroundColor: "rgb(159, 250, 157)",
+              border: "none",
+              marginLeft: 6,
+            }}
             className="btn btn-primary btn-sm edit"
             title="Chi tiết"
             data-toggle="modal"
             data-target="#ModalUP"
           >
-          
-            <i  style={{ color: "var(--text-color)" }} class="fa-regular fa-eye"></i>
+            <i
+              style={{ color: "var(--text-color)" }}
+              className="fa-regular fa-eye"
+            ></i>
           </button>
         </div>
       ),
@@ -285,13 +316,15 @@ const TableComponentOrder = () => {
   ];
 
   const filteredData = orders?.data.filter((order) =>
-    order.shippingAddress.fullName.toLowerCase().includes(searchText.toLowerCase())
+    order.shippingAddress.fullName
+      .toLowerCase()
+      .includes(searchText.toLowerCase())
   );
 
   return (
     <div>
       {loading && <LoadingComponent />}
- 
+
       <div className="py-4">
         <div className="row d-flex justify-content-between">
           <div className="col-sm-12 col-md-6 d-flex align-items-center">
@@ -345,7 +378,6 @@ const TableComponentOrder = () => {
           ></i>
           Xóa đơn hàng đã chọn ({selectedRowKeys.length})
         </Button>
-            
       </div>
       <Table
         dataSource={filteredData}
@@ -373,9 +405,7 @@ const TableComponentOrder = () => {
           <Button key="cancel" onClick={handleCancel}>
             Hủy
           </Button>,
-          <Button key="save" type="primary" 
-          onClick={handleSave}
-          >
+          <Button key="save" type="primary" onClick={handleSave}>
             Lưu
           </Button>,
         ]}
@@ -428,35 +458,23 @@ const TableComponentOrder = () => {
               />
             </div>
             <div className="mb-2">
-              <label>Trạng thái thanh toán:</label>
+              <label>Trạng thái đơn hàng:</label>
               <Select
-                value={selectedOrder.isPaid ? "Đã thanh toán" : "Chưa thanh toán"}
+                value={selectedOrder.isPaid ? "Đã xác nhận" : "Chưa xác nhận"}
                 onChange={(value) =>
                   setSelectedOrder({
                     ...selectedOrder,
-                    isPaid: value === "Đã thanh toán",
+                    isPaid: value === "Đã xác nhận",
+                    isDelivered:
+                      value === "Đã xác nhận"
+                        ? false
+                        : selectedOrder.isDelivered,
                   })
                 }
                 style={{ width: "100%" }}
               >
-                <Option value="Đã thanh toán">Đã thanh toán</Option>
-                <Option value="Chưa thanh toán">Chưa thanh toán</Option>
-              </Select>
-            </div>
-            <div className="mb-2">
-              <label>Trạng thái giao hàng:</label>
-              <Select
-                value={selectedOrder.isDelivered ? "Đã giao hàng" : "Chưa giao hàng"}
-                onChange={(value) =>
-                  setSelectedOrder({
-                    ...selectedOrder,
-                    isDelivered: value === "Đã giao hàng",
-                  })
-                }
-                style={{ width: "100%" }}
-              >
-                <Option value="Đã giao hàng">Đã giao hàng</Option>
-                <Option value="Chưa giao hàng">Chưa giao hàng</Option>
+                <Option value="Đã xác nhận">Đã xác nhận</Option>
+                <Option value="Chưa xác nhận">Chưa xác nhận</Option>
               </Select>
             </div>
           </>

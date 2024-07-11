@@ -55,11 +55,11 @@ const OrderDetails = ({ order, visible, onClose }) => {
             }
           })()}
         </Descriptions.Item>
-        <Descriptions.Item label="Trạng thái thanh toán">
-          {order.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}
+        <Descriptions.Item label="Trạng thái đơn hàng">
+          {order.isPaid ? 'Đã xác nhận' : 'Chưa xác nhận'}
         </Descriptions.Item>
-        <Descriptions.Item label="Trạng thái giao hàng">
-          {order.isDelivered ? 'Đã giao hàng' : 'Chưa giao hàng'}
+        <Descriptions.Item label="Tình trạng vận chuyển">
+          { order.isPaid && !order.isDelivered ? 'Đang giao hàng' : (order.isDelivered ? 'Đã giao hàng' : 'Chưa giao hàng')}
         </Descriptions.Item>
         <Descriptions.Item label="Tổng số tiền">
           {order.totalPrice}

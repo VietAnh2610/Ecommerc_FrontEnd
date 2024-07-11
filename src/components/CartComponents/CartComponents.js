@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import "./CartComponents.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addOrderProduct } from "../../redux/counter/orderSlice";
 import { toast } from "react-toastify";
+import QuickViewComponent from "../QuickViewComponent/QuickViewComponent";
 
 const CartComponents = (props) => {
+  const [isQuickViewVisible, setQuickViewVisible] = useState(false);
   const {
     id,
     countInStock,
@@ -25,11 +27,12 @@ const CartComponents = (props) => {
   };
 
   const renderRatingStars = () => {
-    const stars = [];
-    for (let i = 0; i < rating; i++) {
-      stars.push(<i key={i} className="fa-solid fa-star"></i>);
-    }
-    return stars;
+    return (
+      <div className="rating">
+        <span>({rating})</span>
+        <i style={{ marginLeft: "3px" }} className="fa-solid fa-star"></i>
+      </div>
+    );
   };
 
   const isProductsPage = location.pathname === "/products";
@@ -54,6 +57,13 @@ const CartComponents = (props) => {
     console.error("Invalid product ID:", id);
     return null;
   }
+  const handleQuickView = () => {
+    setQuickViewVisible(true);
+  };
+
+  const closeQuickView = () => {
+    setQuickViewVisible(false);
+  };
 
   return (
     <div className={`col-lg-${isProductsPage ? "4" : "3"} col-md-6`}>
@@ -63,9 +73,7 @@ const CartComponents = (props) => {
             {Array.isArray(image) ? (
               <Link to={`/product-detail/${id}`}>
                 <div className="aaaa">
-                  {" "}
                   <img
-                    style={{ width: "80%" }}
                     className="img-fluid"
                     src={image[0]}
                     alt={name}
@@ -74,36 +82,28 @@ const CartComponents = (props) => {
               </Link>
             ) : (
               <img
-                style={{ width: "90%" }}
                 className="img-fluid"
                 src={image}
                 alt={name}
               />
             )}
-            <div className="p_icon">
-              <Link to={`/product-detail/${id}`}>
+            <div className="p_icon quickview">
+              <Link onClick={handleQuickView}>
                 <i className="fa-regular fa-eye"></i>
               </Link>
               <a onClick={handleAddCart}>
                 <i className="fa-solid fa-cart-plus"></i>
               </a>
             </div>
-
-          
           </div>
         </div>
         <div className="product-btm">
           <Link to={`/product-detail/${id}`} className="d-block">
             <p className="name_product">{name}</p>
           </Link>
-          <div className="mt-4 cart-title">
+          <div className="cart-title">
             <span style={{ color: "var(--text-color)" }}>{price} đ</span>
             <span>{original_price} đ</span>
-          </div>
-          <div className="promotion">
-            <p style={{ textTransform: "none" }} className="coupon-price">
-              Không phí chuyển đổi khi trả góp 0% qua thẻ tín dụng kỳ hạn 3-6...
-            </p>
           </div>
           <div className="cart-footer">
             <div className="cart-footer-start">{renderRatingStars()}</div>
@@ -115,6 +115,22 @@ const CartComponents = (props) => {
           </div>
         </div>
       </div>
+      {isQuickViewVisible && (
+        <QuickViewComponent
+          product={{
+            id,
+            countInStock,
+            descriptions,
+            image,
+            name,
+            price,
+            rating,
+            type,
+            original_price,
+          }}
+          onClose={closeQuickView}
+        />
+      )}
     </div>
   );
 };

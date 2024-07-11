@@ -1,10 +1,10 @@
 .single-product {
    margin-bottom: 50px;
    border: 1px solid #f0f2f1;
-  width: 100%;
+   width: 100%;
    transition: all 0.5s ease;
- cursor: pointer;
- border-radius: 15px;
+   cursor: pointer;
+   border-radius: 15px;
    &:hover {
   
     
@@ -47,10 +47,33 @@
      font-size: 15px;
    }
  }
+
+ .product-img {
+  width: 100%;
+  height: 350px; // Đặt chiều cao cố định cho ảnh
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Đảm bảo ảnh được cắt và căn giữa
+  }
+}
+
+.aaaa {
+  width: 100%;
+  height: 100%;
+}
+
  
  .cart-title {
   display: flex;
   justify-content: space-between;
+  margin-top: -10px;
+  margin-bottom: 5px;
    span {
     display: block;
      font-weight: 700;
@@ -163,3 +186,4 @@ margin: 0;
   display: flex;
   align-items: center;
 justify-content: center;}
+

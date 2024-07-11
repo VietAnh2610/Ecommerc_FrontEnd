@@ -40,7 +40,7 @@ const HeaderComponent = () => {
   return (
     <header>
       <div className="top-menu">
-        <div className="container px-5">
+        <div className="container">
           <div className="row ">
             <div className="col-lg-7 ">
               <div className="top-menu-left  d-flex  align-items-center">
@@ -136,7 +136,7 @@ const HeaderComponent = () => {
           </div>
         </div>
       </div>
-      <div className="container header px-5">
+      <div className="container header">
         <nav className="navbar navbar-expand-lg navbar-light py-3">
           <div className="container-fluid">
             <Link to="/" className="navbar-brand">
@@ -176,7 +176,7 @@ const HeaderComponent = () => {
                   }`}
                 >
                   <Link to="/products" className="nav-link">
-                    CỬA HÀNG
+                    SẢN PHẨM
                   </Link>
                 </li>
                 <li
@@ -186,6 +186,15 @@ const HeaderComponent = () => {
                 >
                   <Link to="/Blog" className="nav-link">
                     TIN TỨC
+                  </Link>
+                </li>
+                <li
+                  className={`nav-item ${
+                    location.pathname === "/" ? "active" : ""
+                  }`}
+                >
+                  <Link to="/location" className="nav-link">
+                    CỬA HÀNG
                   </Link>
                 </li>
                 <li

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./HomePage.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,9 +9,15 @@ import HomeSlider from "../../components/HomeSlider/HomeSlider";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import AoKhoac from "../../assets/images/aokhoac.png";
+import AoSoMi from "../../assets/images/aosomi.png";
+import AoThun from "../../assets/images/aothun.png";
+import QuanDaiNam from "../../assets/images/quandainam.png";
+import QuanJeans from "../../assets/images/quanjeans.png";
+import QuanShort from "../../assets/images/quanshort.png";
+import BlogComponent from "../../components/BlogComponent/BlogComponent";
 
 const HomePage = () => {
-
   const navigate = useNavigate();
 
   const fetchProductAll = async () => {
@@ -22,6 +28,60 @@ const HomePage = () => {
     queryKey: ["products"],
     queryFn: fetchProductAll,
   });
+
+  const fixedProductTypes = [
+    { name: "Áo thun nam", image: AoThun },
+    { name: "Áo sơ mi", image: AoSoMi },
+    { name: "Áo khoác", image: AoKhoac },
+    { name: "Quần dài nam", image: QuanDaiNam },
+    { name: "Quần jeans", image: QuanJeans },
+    { name: "Quần short", image: QuanShort },
+  ];
+
+  const [productTypes, setProductTypes] = useState(fixedProductTypes);
+
+  useEffect(() => {
+    const fetchProductTypes = async () => {
+      try {
+        const res = await ProductService.getAllTypeProduct();
+        const typesWithCounts =
+          fixedProductTypes.map((type) => ({
+            ...type,
+            count:
+              res?.data?.filter((product) => product.type === type.name)
+                .length || 0,
+          })) || [];
+        setProductTypes(typesWithCounts);
+        localStorage.setItem("productTypes", JSON.stringify(typesWithCounts));
+      } catch (error) {
+        console.error("Error fetching product types:", error);
+      }
+    };
+
+    const storedProductTypes = localStorage.getItem("productTypes");
+    if (storedProductTypes) {
+      setProductTypes(JSON.parse(storedProductTypes));
+    } else {
+      fetchProductTypes();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (products) {
+      const updatedProductTypes = fixedProductTypes.map((type) => {
+        const count = products.data.filter(
+          (product) => product.type === type.name
+        ).length;
+        return { ...type, count };
+      });
+      setProductTypes(updatedProductTypes);
+      localStorage.setItem("productTypes", JSON.stringify(updatedProductTypes));
+    }
+  }, [products]);
+
+  const handleProductClick = (type) => {
+    navigate(`/products?type=${type}`);
+  };
 
   return (
     <div className="Home">
@@ -39,29 +99,29 @@ const HomePage = () => {
           </div>
           <div className="col-md-6 col-lg-3 col-6 mb-4 homepage-itroduce">
             <div className="img-homepage-intro">
-              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_1.png?v=8" />
+              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_2.png?v=8" />
             </div>
             <div className="text-homepage-intro">
-              <p>Miễn phí vận chuyển</p>
-              <span>Nhận hàng trong vòng 3 ngày</span>
+              <p>Quà tặng hấp dẫn</p>
+              <span>Nhiều ưu đãi khuyến mãi hot</span>
             </div>
           </div>
           <div className="col-md-6 col-lg-3 col-6 mb-4 homepage-itroduce">
             <div className="img-homepage-intro">
-              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_1.png?v=8" />
+              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_3.png?v=8" />
             </div>
             <div className="text-homepage-intro">
-              <p>Miễn phí vận chuyển</p>
-              <span>Nhận hàng trong vòng 3 ngày</span>
+              <p>Bảo đảm chất lượng</p>
+              <span>Sản phẩm đã được kiểm định</span>
             </div>
           </div>
           <div className="col-md-6 col-lg-3 col-6 mb-4 homepage-itroduce">
             <div className="img-homepage-intro">
-              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_1.png?v=8" />
+              <img src="https://theme.hstatic.net/200000696635/1001199686/14/policies_icon_4.png?v=8" />
             </div>
             <div className="text-homepage-intro">
-              <p>Miễn phí vận chuyển</p>
-              <span>Nhận hàng trong vòng 3 ngày</span>
+              <p>Hotline: 19001993</p>
+              <span>Dịch vụ hỗ trợ bạn 24/7</span>
             </div>
           </div>
         </div>
@@ -81,76 +141,43 @@ const HomePage = () => {
               </div>
             </div>
           </section>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_1_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Áo khoác</p>
-              <p className="hihi">8 sản phẩm</p>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_2_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Áo sơ mi</p>
-              <p className="hihi">8 sản phẩm</p>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_3_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Áo thun</p>
-              <p className="hihi">8 sản phẩm</p>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_4_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Quần dài nam</p>
-              <p className="hihi">8 sản phẩm</p>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_5_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Quần jeans</p>
-              <p className="hihi">8 sản phẩm</p>
-            </div>
-          </div>
-          <div className="col-md-6 col-lg-2 col-6 d-flex flex-column align-items-center mb-4 hover-product">
-            <div className="img-homepage-intro">
-              <img
-                src="https://theme.hstatic.net/200000696635/1001199686/14/season_coll_6_img_large.png?v=8"
-                className="img-fluid mx-auto"
-              />
-            </div>
-            <div className="text-homepage-products text-center">
-              <p className="mb-0">Quần short</p>
-              <p className="hihi">8 sản phẩm</p>
+
+          <div className="container">
+            <div className="product-types">
+              <div className="row">
+                {productTypes.map((type, index) => (
+                  <div
+                    key={index}
+                    className="col-6 col-md-4 col-lg-2 d-flex flex-column align-items-center mb-4 product-type-item"
+                    onClick={() => handleProductClick(type.name)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img
+                      src={type.image}
+                      alt={type.name}
+                      className="product-type-image"
+                    />
+                    <div className="product-type-count text-center mt-2">
+                      <span style={{ fontSize: "18px" }}>{type.name}</span>
+                      <div
+                        style={{
+                          fontSize: "15px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <span style={{ marginTop: "-15px", color: "gray" }}>
+                          {type.count}
+                        </span>
+                        <p style={{ marginLeft: "3px", color: "gray" }}>
+                          sản phẩm
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -168,34 +195,41 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <div className="col-lg-9  container px-5 ">
+      <div className="col-lg-12  container ">
         <div className="products row d-flex flex-wrap">
-          {products?.data?.map((product) => {
-            return (
-              <CartComponents
-                key={product._id}
-                id={product._id}
-                countInStock={product.countInStock}
-                descriptions={product.description}
-                image={product.image}
-                name={product.name}
-                price={product.price}
-                rating={product.rating}
-                type={product.type}
-                original_price={product.original_price}
-              />
-            );
-          })}
+          {products?.data
+            ?.filter((product) => product.type)
+            // ?.filter((product) => product.type === "Quần jeans")
+            .slice(0, 8)
+            .map((product) => {
+              return (
+                <CartComponents
+                  key={product._id}
+                  id={product._id}
+                  countInStock={product.countInStock}
+                  descriptions={product.description}
+                  image={product.image}
+                  name={product.name}
+                  price={product.price}
+                  rating={product.rating}
+                  type={product.type}
+                  original_price={product.original_price}
+                />
+              );
+            })}
         </div>
       </div>
 
-      <section className="all-product"  onClick={() => navigate("/products")} style={{cursor: "pointer"}}>
+      <section
+        className="all-product"
+        onClick={() => navigate("/products")}
+        style={{ cursor: "pointer" }}
+      >
         <p>Xem tất cả</p>
         <i class="fa-solid fa-chevron-right"></i>
       </section>
 
-
-      <section className="offer-area">
+      <section className="container offer-area">
         <div className="py-3">
           <img
             className="offer-area-img"
@@ -203,19 +237,25 @@ const HomePage = () => {
           />
         </div>
       </section>
-  
 
-      <section className="">
+      <section className="container">
         <div className="row new_product_area-left justify-content-center ">
           <div className="col-lg-12">
-            <div class="main_title">
-              <h2>
-                <span>bài viết mới nhất</span>
-              </h2>
-              <p>Những bài blog về thời trang mới nhất</p>
+            <div class="news-header">
+              <h2>TIN TỨC</h2>
             </div>
+            <BlogComponent />
           </div>
         </div>
+      </section>
+
+      <section
+        className="all-product"
+        onClick={() => navigate("/blog")}
+        style={{ cursor: "pointer", marginBottom:"30px" }}
+      >
+        <p>Xem tất cả</p>
+        <i class="fa-solid fa-chevron-right"></i>
       </section>
     </div>
   );

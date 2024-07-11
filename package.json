@@ -23,10 +23,12 @@
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.2",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^5.0.7",
     "react-query": "^3.39.3",
     "react-redux": "^9.1.0",
     "react-router-dom": "^6.23.0",
     "react-scripts": "5.0.1",
+    "react-select": "^5.8.0",
     "react-slick": "^0.30.2",
     "react-toastify": "^10.0.5",
     "redux-thunk": "^3.1.0",
@@ -35,6 +37,7 @@
     "slick-carousel": "^1.8.1",
     "styled-components": "^6.1.8",
     "tinymce": "^7.1.2",
+    "uuid": "^10.0.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -66,3 +69,5 @@
   },
   "proxy": "http://localhost:3001"
 }
+
+
