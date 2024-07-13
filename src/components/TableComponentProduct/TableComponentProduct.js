@@ -6,7 +6,7 @@ import "./TableComponent.scss";
 import { getBase64 } from "../../utils";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { toast } from "react-toastify";
-const { Option } = Select; // Điều chỉnh import Option
+const { Option } = Select;
 
 const TableComponent = () => {
   const [searchText, setSearchText] = useState("");
@@ -89,6 +89,13 @@ const TableComponent = () => {
     setSelectedProduct(record);
     setIsModalVisible(true);
     form.setFieldsValue(record);
+
+    if (record.type && categories.includes(record.type)) {
+      setNewCategory(false); 
+    } else {
+      setNewCategory(true); 
+    }
+
     const images = Array.isArray(record.image) ? record.image : [];
     setImageUrls(images);
   };
@@ -101,25 +108,44 @@ const TableComponent = () => {
     try {
       const values = await form.validateFields();
       setLoading(true);
+
       const base64Images = imageUrls.map((url) => {
         const base64Prefix = "data:image/jpeg;base64,";
         return url.startsWith(base64Prefix)
           ? url
           : base64Prefix + url.split(",")[1];
       });
+
+      let sizes = values.size;
+      let colors = values.color;
+      if (Array.isArray(values.size)) {
+        sizes = values.size.map((size) => size.trim()).filter(Boolean);
+      } else {
+        sizes = values.size.split(",").map((size) => size.trim());
+      }
+      if (Array.isArray(values.color)) {
+        colors = values.color.map((color) => color.trim()).filter(Boolean);
+      } else {
+        colors = values.color.split(",").map((color) => color.trim());
+      }
+
       let categoryValue = values.category;
       if (values.category === "new") {
         categoryValue = values.newCategory;
       }
+
       await ProductService.updateProduct(
         selectedProduct._id,
         {
           ...values,
           type: categoryValue,
           image: base64Images,
+          size: sizes,
+          color: colors,
         },
         accessToken
       );
+
       setIsModalVisible(false);
       form.resetFields();
       setLoading(false);
@@ -180,14 +206,13 @@ const TableComponent = () => {
       key: "image",
       render: (image) => (
         <>
-          {Array.isArray(image) &&
-           
-              <img
-                src={image[0]} 
-                alt={"ảnh sản phẩm"}
-                style={{ width: "70px", marginRight: "5px" }}
-              />
-            }
+          {Array.isArray(image) && image.length > 0 && (
+            <img
+              src={image[0]} 
+              alt={"ảnh sản phẩm"}
+              style={{ width: "70px", marginRight: "5px" }}
+            />
+          )}
         </>
       ),
     },
@@ -195,31 +220,17 @@ const TableComponent = () => {
       title: "Giá gốc",
       dataIndex: "original_price",
       key: "original_price",
-      sorter: (c, d) => {
-        const priceA = parseFloat(
-          c.original_price.replaceAll(".", "").replace(",", ".")
-        );
-        const priceB = parseFloat(
-          d.original_price.replaceAll(".", "").replace(",", ".")
-        );
-
-        return priceA - priceB;
-      },
+      sorter: (a, b) =>
+        parseFloat(a.original_price.replaceAll(".", "").replace(",", ".")) -
+        parseFloat(b.original_price.replaceAll(".", "").replace(",", ".")),
     },
     {
       title: "Giá bán",
       dataIndex: "price",
       key: "price",
-      sorter: (e, f) => {
-        const priceA = parseFloat(
-          e.price.replaceAll(".", "").replace(",", ".")
-        );
-        const priceB = parseFloat(
-          f.price.replaceAll(".", "").replace(",", ".")
-        );
-
-        return priceA - priceB;
-      },
+      sorter: (a, b) =>
+        parseFloat(a.price.replaceAll(".", "").replace(",", ".")) -
+        parseFloat(b.price.replaceAll(".", "").replace(",", ".")),
     },
     {
       title: "Danh mục",
@@ -233,6 +244,20 @@ const TableComponent = () => {
       sorter: (a, b) => a.countInStock - b.countInStock,
     },
     {
+      title: "Kích thước",
+      dataIndex: "size",
+      key: "size",
+      render: (sizes) => sizes.join(", "),
+      sorter: (a, b) => a.size.length - b.size.length,
+    },
+    {
+      title: "Màu sắc",
+      dataIndex: "color",
+      key: "color",
+      render: (colors) => colors.join(", "),
+      sorter: (a, b) => a.colors.length - b.colors.length,
+    },
+    {
       title: "Tình trạng",
       dataIndex: "countInStock",
       key: "status",
@@ -244,12 +269,6 @@ const TableComponent = () => {
         </span>
       ),
     },
-    // {
-    //   title: "Mô tả",
-    //   dataIndex: "description",
-    //   key: "description",
-    //   width: 400,
-    // },
     {
       title: "Chức năng",
       dataIndex: "operation",
@@ -260,8 +279,7 @@ const TableComponent = () => {
             onClick={() => handleDeleteProduct(record._id)}
             style={{
               marginRight: 6,
-              backgroundColor
-              : "rgb(247, 196, 195)",
+              backgroundColor: "rgb(247, 196, 195)",
               border: "none",
             }}
             className="btn btn-primary btn-sm trash"
@@ -274,7 +292,10 @@ const TableComponent = () => {
           </button>
           <button
             onClick={() => handleEditProduct(record)}
-            style={{ backgroundColor: "rgb(250, 226, 197)", border: "none" }}
+            style={{
+              backgroundColor: "rgb(250, 226, 197)",
+              border: "none",
+            }}
             className="btn btn-primary btn-sm edit"
             title="Sửa"
             data-toggle="modal"
@@ -293,6 +314,7 @@ const TableComponent = () => {
   const filteredData = products?.data.filter((product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase())
   );
+
   const rowSelection = {
     selectedRowKeys,
     onChange: (selectedKeys) => {
@@ -348,7 +370,7 @@ const TableComponent = () => {
           className="delete_list_user"
           type="danger"
           disabled={selectedRowKeys.length === 0}
-          onClick={() => handleDeleteProduct(null)} 
+          onClick={() => handleDeleteProduct(null)}
         >
           <i
             style={{ marginRight: 5, color: "rgb(222, 4, 0)" }}
@@ -470,15 +492,17 @@ const TableComponent = () => {
           <Form.Item label="Danh mục" name="category">
             <Select
               placeholder="Chọn danh mục hoặc thêm mới"
+              // defaultValue={selectedProduct?.type}
+            
               onChange={(value) => {
-                // Nếu người dùng chọn một danh mục mới
                 if (value === "new") {
-                  setNewCategory(true); // Hiển thị trường nhập danh mục mới
+                  setNewCategory(true);
                 } else {
-                  setNewCategory(false); // Ẩn trường nhập danh mục mới
+                  setNewCategory(false); 
                 }
               }}
             >
+                
               {categories.map((type) => (
                 <Option key={type} value={type}>
                   {type}
@@ -496,10 +520,7 @@ const TableComponent = () => {
                 { required: true, message: "Vui lòng nhập danh mục mới" },
               ]}
             >
-              <Input
-                value={newCategory}
-                onChange={(e) => setNewCategory(e.target.value)}
-              />
+              <Input />
             </Form.Item>
           )}
 
@@ -509,6 +530,27 @@ const TableComponent = () => {
             rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
           >
             <Input type="number" />
+          </Form.Item>
+          <Form.Item
+            name="size"
+            label="Kích thước"
+            rules={[{ required: true, message: "Vui lòng nhập kích thước!" }]}
+          >
+            <Input placeholder="Nhập kích thước (cách nhau bởi dấu phẩy)" />
+          </Form.Item>
+          <Form.Item
+            name="color"
+            label="Màu sắc"
+            rules={[{ required: true, message: "Vui lòng nhập màu sắc!" }]}
+          >
+            <Input placeholder="Nhập màu sắc (cách nhau bởi dấu phẩy)" />
+          </Form.Item>
+          <Form.Item
+            name="countInStock"
+            label="Số lượng"
+            rules={[{ required: true, message: "Vui lòng nhập số lượng!" }]}
+          >
+            <Input type="number" placeholder="Nhập số lượng" />
           </Form.Item>
           <Form.Item
             label="Mô tả"

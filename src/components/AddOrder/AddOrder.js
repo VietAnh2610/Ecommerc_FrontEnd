@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./AddUser.scss";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
 import { toast } from "react-toastify";
-import { Modal, Button, Select, InputNumber } from "antd"; // Import InputNumber từ Ant Design
+import { Modal, Button, Select, InputNumber } from "antd"; 
 import * as OrderService from "../../services/OrderService";
 import * as UserService from "../../services/UserService";
 import * as ProductService from "../../services/ProductService";
@@ -15,7 +15,7 @@ const AddOrder = () => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedProductIds, setSelectedProductIds] = useState([]);
-  const [productAmounts, setProductAmounts] = useState({}); // State để lưu số lượng sản phẩm
+  const [productAmounts, setProductAmounts] = useState({}); 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const [orderState, setOrderState] = useState({

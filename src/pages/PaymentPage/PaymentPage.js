@@ -35,6 +35,7 @@ const PaymentPage = () => {
       user: user?.id,
     });
   };
+  console.log("duex liệu paymen", selectedProducts)
   const toggleShowAllProducts = () => {
     setShowAllProducts((prevState) => !prevState);
   };
@@ -97,6 +98,14 @@ const PaymentPage = () => {
                             {product.name}
                           </a>
                         </div>
+                        <div className="product-attributes">
+            <p>
+              <strong>Màu:</strong> {product.selectedColor}
+            </p>
+            <p>
+              <strong>Kích thước:</strong> {product.selectedSize}
+            </p>
+          </div>
                         <div
                           style={{ marginTop: 30 }}
                           className="d-flex justify-content-between align-items-center"

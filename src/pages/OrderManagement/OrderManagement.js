@@ -156,6 +156,7 @@ const OrderManagement = () => {
                     </div>
                   </div>
                   {order?.orderItems.map((item, i) => {
+                    console.log(item)
                     const firstImage = item.image[0];
                     const imageUrl = `${firstImage}`;
                     return (
@@ -188,6 +189,11 @@ const OrderManagement = () => {
                                 {item.price}đ
                               </p>
                             </div>
+                          </div>
+                          <div>
+
+                            <p>Màu: {item.selectedColor}</p>
+                            <p>Size: {item.selectedSize}</p>
                           </div>
                         </div>
                       </div>

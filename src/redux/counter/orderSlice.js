@@ -37,16 +37,27 @@ export const orderSlice = createSlice({
   reducers: {
     addOrderProduct: (state, action) => {
       const { orderItem } = action.payload;
-      const existingItem = state.orderItems.find((item) => item.product === orderItem.product);
-      if (existingItem) {
-        existingItem.amount += orderItem.amount;
+      const existingItemIndex = state.orderItems.findIndex((item) => 
+        item.product === orderItem.product &&
+        item.selectedColor === orderItem.selectedColor &&
+        item.selectedSize === orderItem.selectedSize
+      );
+    
+      if (existingItemIndex !== -1) {
+        // If the item already exists, increase its amount
+        state.orderItems[existingItemIndex].amount += orderItem.amount;
       } else {
-        orderItem.selected = false;
-        state.orderItems.push(orderItem);
+        // Otherwise, add the new item with selectedColor and selectedSize
+        state.orderItems.push({
+          ...orderItem,
+          selectedColor: orderItem.selectedColor || '', // Ensure selectedColor is initialized
+          selectedSize: orderItem.selectedSize || '', // Ensure selectedSize is initialized
+        });
       }
       calculatePrices(state);
       saveOrderToLocalStorage(state);
     },
+    
     removeOrderProduct: (state, action) => {
       const { productId } = action.payload;
       state.orderItems = state.orderItems.filter((item) => item.product !== productId);
@@ -54,10 +65,14 @@ export const orderSlice = createSlice({
       saveOrderToLocalStorage(state);
     },
     updateQuantity: (state, action) => {
-      const { productId, amount } = action.payload;
+      const { productId, amount, selectedColor, selectedSize } = action.payload;
       const existingItem = state.orderItems.find((item) => item.product === productId);
+      
       if (existingItem) {
         existingItem.amount = amount;
+        existingItem.selectedColor = selectedColor || existingItem.selectedColor;
+        existingItem.selectedSize = selectedSize || existingItem.selectedSize;
+        
         if (existingItem.amount < 1) {
           existingItem.amount = 1;
         }
@@ -66,7 +81,6 @@ export const orderSlice = createSlice({
       saveOrderToLocalStorage(state);
     },
     clearCart: (state) => {
-      // Lọc ra các sản phẩm chưa được chọn và mua
       state.orderItems = state.orderItems.filter((item) => !item.selected);
       saveOrderToLocalStorage(state);
     },
@@ -85,7 +99,6 @@ export const orderSlice = createSlice({
       saveOrderToLocalStorage(state);
     },
     clearPurchasedProducts: (state) => {
-      // Lọc ra các sản phẩm chưa được mua
       state.orderItems = state.orderItems.filter((item) => !item.isPurchased);
       saveOrderToLocalStorage(state);
     },

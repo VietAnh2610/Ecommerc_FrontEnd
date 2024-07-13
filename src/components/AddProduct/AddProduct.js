@@ -15,6 +15,8 @@ const AddProduct = () => {
     countInStock: "",
     rating: "",
     image: [],
+    size:[],
+    color:[],
     description: "",
     original_price: ""
   });
@@ -39,9 +41,16 @@ const AddProduct = () => {
   }, []);
 
   const handleOnChange = (e) => {
+    const { name, value } = e.target;
+    let newValue = value;
+
+    if (name === "size" || name === "color") {
+      newValue = value.split(",").map(item => item.trim());
+    }
+
     setStateProduct({
       ...stateProduct,
-      [e.target.name]: e.target.value
+      [name]: newValue
     });
   };
 
@@ -81,7 +90,7 @@ const AddProduct = () => {
     e.preventDefault();
     setIsLoading(true);
   
-    // Kiểm tra các trường thông tin
+   
     const formErrors = {};
     if (!stateProduct.name) {
       formErrors.name = "Vui lòng nhập tên sản phẩm.";
@@ -122,6 +131,8 @@ const AddProduct = () => {
         rating: "",
         description: "",
         image: [],
+        size:[],
+        color:[],
         original_price: ""
       });
       setSelectedAvatars([]);
@@ -145,6 +156,8 @@ const AddProduct = () => {
       rating: "",
       description: "",
       image: [],
+      size:[],
+      color:[],
       original_price: ""
     });
     setSelectedAvatars([]);
@@ -185,7 +198,8 @@ const AddProduct = () => {
              {errors.name && <p className="error-messages">{errors.name}</p>}
           </div>
 
-          <div className="form-group col-md-3">
+          
+           <div className="form-group col-md-3">
             <label className="control-label">Số lượng</label>
             <input
               className="form-control"
@@ -195,6 +209,27 @@ const AddProduct = () => {
               name="countInStock"
             />
              {errors.countInStock && <p className="error-messages">{errors.countInStock}</p>}
+          </div>
+          <div className="form-group col-md-3">
+            <label className="control-label">Size</label>
+            <input
+              className="form-control"
+              type="text"
+              value={stateProduct.size.join(", ")}
+              onChange={handleOnChange}
+              name="size"
+            />
+          </div>
+
+          <div className="form-group col-md-3">
+            <label className="control-label">Color</label>
+            <input
+              className="form-control"
+              type="text"
+              value={stateProduct.color.join(", ")}
+              onChange={handleOnChange}
+              name="color"
+            />
           </div>
 
           <div className="form-group col-md-3">
@@ -227,7 +262,7 @@ const AddProduct = () => {
             />
 
           </div>
-          <div style={{ marginTop: 7, padding: 10 }} className="form-group col-md-3">
+          <div  className="form-group col-md-3">
             <label className="control-label">Giá bán</label>
             <input
               className="form-control"
@@ -238,7 +273,7 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="form-group col-md-3 py-3">
+          <div className="form-group col-md-3">
             <label className="control-label">Đánh giá</label>
             <input
               className="form-control"

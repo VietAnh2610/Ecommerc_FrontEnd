@@ -228,6 +228,8 @@ const ProductsPage = () => {
                     rating={product.rating}
                     type={product.type}
                     original_price={product.original_price}
+                    size={product.size}
+                    color={product.color}
                   />
                 ))}
               </div>

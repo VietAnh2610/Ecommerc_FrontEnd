@@ -6,21 +6,23 @@ import {
   increaseQuantity,
   decreaseQuantity,
   removeOrderProduct,
-  updateQuantity,
 } from "../../redux/counter/orderSlice";
 import { Modal } from "antd";
 
 const CartPage = () => {
   const order = useSelector((state) => state.order);
+  console.log("dữ liệu", order);
   const user = useSelector((state) => state.user);
-  console.log(order);
   const dispatch = useDispatch();
   const [selectAll, setSelectAll] = useState(false);
   const [selectedItems, setSelectedItems] = useState({});
   const navigate = useNavigate();
+
+
   const handleIncreaseQuantity = (productId) => {
     dispatch(increaseQuantity(productId));
   };
+
   const handleAddCart = () => {
     if (!user?.id) {
       Modal.confirm({
@@ -28,7 +30,7 @@ const CartPage = () => {
         content: "Vui lòng đăng nhập để mua hàng",
         okText: "Đăng nhập",
         onOk() {
-          navigate("/singin");
+          navigate("/signin");
         },
       });
       return;
@@ -44,8 +46,8 @@ const CartPage = () => {
           title: "Cảnh báo",
           content: (
             <div>
-              Vui lòng cập nhật thông tin mua hàng trong hồ sơ trước khi mua sản
-              phẩm: <strong>{missingFields.join(", ")}</strong>
+              Vui lòng cập nhật thông tin mua hàng trong hồ sơ trước khi mua sản phẩm:{" "}
+              <strong>{missingFields.join(", ")}</strong>
             </div>
           ),
           okText: "Chỉnh sửa hồ sơ",
@@ -68,6 +70,7 @@ const CartPage = () => {
       });
     }
   };
+
   const handleDecreaseQuantity = (productId, currentQuantity) => {
     if (currentQuantity <= 1) {
       Modal.confirm({
@@ -82,12 +85,12 @@ const CartPage = () => {
     }
   };
 
-  const handleRemoveProduct = (productId) => {
+  const handleRemoveProduct = (productId, selectedColor, selectedSize) => {
     Modal.confirm({
       title: "Xác nhận",
       content: "Bạn có chắc chắn muốn xóa sản phẩm này không?",
       onOk() {
-        dispatch(removeOrderProduct({ productId }));
+        dispatch(removeOrderProduct({ productId, selectedColor, selectedSize }));
       },
     });
   };
@@ -103,7 +106,10 @@ const CartPage = () => {
         content: "Bạn có chắc chắn muốn xóa các sản phẩm đã chọn không?",
         onOk() {
           selectedProductIds.forEach((productId) => {
-            dispatch(removeOrderProduct({ productId }));
+            const { selectedColor, selectedSize } = order.orderItems.find(
+              (item) => item.product === productId
+            );
+            dispatch(removeOrderProduct({ productId, selectedColor, selectedSize }));
           });
           setSelectedItems({});
           setSelectAll(false);
@@ -126,13 +132,25 @@ const CartPage = () => {
     });
     setSelectedItems(updatedSelectedItems);
   };
+  
 
   const handleToggleSelectItem = (productId) => {
+    const isAllSelected = order.orderItems
+      .filter((item) => item.product === productId)
+      .every((item) => selectedItems[item.product]);
+  
     const updatedSelectedItems = { ...selectedItems };
-    updatedSelectedItems[productId] = !updatedSelectedItems[productId];
+  
+    order.orderItems.forEach((item) => {
+      if (item.product === productId) {
+        updatedSelectedItems[item.product] = !isAllSelected;
+      }
+    });
+  
     setSelectedItems(updatedSelectedItems);
   };
-
+  
+  
   const calculateTotal = () => {
     const total = order.orderItems.reduce((total, item) => {
       const itemPrice = parseFloat(item.price);
@@ -154,6 +172,7 @@ const CartPage = () => {
     currency: "VND",
     minimumFractionDigits: 0,
   });
+
   const calculateSelectedItemsCount = () => {
     return Object.values(selectedItems).filter((isSelected) => isSelected)
       .length;
@@ -171,10 +190,10 @@ const CartPage = () => {
           </div>
         </div>
 
-        {order.orderItems.length === 0 ? (
+        {order?.orderItems?.length === 0 ? (
           <div>
             <div className="Cart_notification">
-              <img src="https://cdn2.cellphones.com.vn/x,webp/media/cart/Cart-empty-v2.png"></img>
+              <img src="https://cdn2.cellphones.com.vn/x,webp/media/cart/Cart-empty-v2.png" alt="empty cart" />
               <p className="">
                 Giỏ hàng của bạn đang trống.
                 <br />
@@ -217,8 +236,7 @@ const CartPage = () => {
                 </button>
               </div>
               {order?.orderItems?.map((orderItem) => {
-                const firstImage = orderItem.image[0];
-
+                const firstImage = orderItem.image && orderItem.image.length > 0 ? orderItem.image[0] : '';
                 const imageUrl = `${firstImage}`;
                 return (
                   <div
@@ -265,10 +283,25 @@ const CartPage = () => {
                             style={{ marginRight: 7, cursor: "pointer" }}
                             className="fa-regular fa-trash-can"
                             onClick={() =>
-                              handleRemoveProduct(orderItem.product)
+                              handleRemoveProduct(
+                                orderItem.product,
+                                orderItem.selectedColor,
+                                orderItem.selectedSize
+                              )
                             }
                           ></i>
                         </div>
+                        <div className="product-attributes">
+            <p>
+              <strong
+              
+              >Màu:</strong> {orderItem.selectedColor}
+            </p>
+            <p>
+              <strong
+              >Kích thước:</strong> {orderItem.selectedSize}
+            </p>
+          </div>
                         <div
                           style={{ marginTop: 30 }}
                           className="d-flex justify-content-between align-items-center"
@@ -276,10 +309,10 @@ const CartPage = () => {
                           <div className="block-box-price">
                             <div className="box-info__box-price">
                               <p className="product__price--show">
-                                {orderItem.price.toLocaleString()}đ
+                                {orderItem.price && orderItem.price.toLocaleString()}đ
                               </p>{" "}
                               <del className="product__price--through">
-                                {orderItem.original_price.toLocaleString()}đ
+                                {orderItem.original_price && orderItem.original_price.toLocaleString()}đ
                               </del>
                             </div>
                           </div>{" "}
@@ -316,7 +349,9 @@ const CartPage = () => {
                           </div>
                         </div>
                       </div>
+                  
                     </div>
+
                     <div className="BH">
                       <i className="fa-solid fa-shield-heart"></i>
                       <p>Bảo vệ toàn diện với Bảo hành mở rộng</p>

@@ -6,6 +6,7 @@ import FooterComponent from '../FooterComponent/FooterComponent';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { addOrderProduct } from '../../redux/counter/orderSlice';
+import { Radio, Checkbox } from 'antd';
 
 const ProductDetailComponent = () => {
   const { id } = useParams(); // Lấy tham số id từ URL
@@ -14,18 +15,21 @@ const ProductDetailComponent = () => {
   const [selectedImage, setSelectedImage] = useState('');
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedColor, setSelectedColor] = useState('');
+  const [selectedSize, setSelectedSize] = useState('');
 
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user); 
+  const user = useSelector((state) => state.user);
+
   const fetchProductDetails = async (productId) => {
     try {
       const response = await ProductService.getDetailsProduct(productId);
       setProduct(response.data);
-      setLargeImage(response.data.image[0]); 
-      setSelectedImage(response.data.image[0]); 
+      setLargeImage(response.data.image[0]);
+      setSelectedImage(response.data.image[0]);
     } catch (error) {
       console.error('Lỗi khi lấy chi tiết sản phẩm:', error);
-      setError('Có lỗi xảy ra khi lấy chi tiết sản phẩm.'); 
+      setError('Có lỗi xảy ra khi lấy chi tiết sản phẩm.');
     }
   };
 
@@ -38,7 +42,7 @@ const ProductDetailComponent = () => {
   const handleQuantityChange = (delta) => {
     setQuantity((prevQuantity) => {
       const newQuantity = prevQuantity + delta;
-      return newQuantity < 1 ? 1 : newQuantity; 
+      return newQuantity < 1 ? 1 : newQuantity;
     });
   };
 
@@ -53,12 +57,11 @@ const ProductDetailComponent = () => {
       return;
     }
 
-    if (product.countInStock = 0) {
+    if (product.countInStock === 0) {
       toast.error('Sản phẩm đã hết hàng');
       return;
     }
-
-    dispatch(addOrderProduct({ 
+    const orderData = {
       orderItem: {
         name: product?.name,
         amount: quantity,
@@ -66,14 +69,30 @@ const ProductDetailComponent = () => {
         price: product?.price,
         product: product?._id,
         original_price: product?.original_price,
+        selectedColor,
+        selectedSize,
       }
-    }));
+    };
+    console.log('Order Data:', orderData);
+
+    // Kiểm tra dữ liệu trước khi dispatch
+    if (!selectedColor) {
+      toast.error('Vui lòng chọn màu sắc');
+      return;
+    }
+
+    if (!selectedSize) {
+      toast.error('Vui lòng chọn kích thước');
+      return;
+    }
+
+    dispatch(addOrderProduct(orderData));
 
     toast.success('Sản phẩm đã được thêm vào giỏ hàng');
   };
 
   if (error) {
-    return <div>{error}</div>; 
+    return <div>{error}</div>;
   }
 
   if (!product) {
@@ -81,9 +100,9 @@ const ProductDetailComponent = () => {
   }
 
   return (
-    <div style={{ marginTop: 110 }}>
-      <div className="product-detail py-5">
-        <div className="container">
+    <div>
+      <div className="product-detail ">
+        <div className="container mb-5">
           <div className="row product_inner">
             <div className="col-lg-6 product_inner-left">
               <img src={largeImage} alt="Large Product Image" />
@@ -106,20 +125,46 @@ const ProductDetailComponent = () => {
             <div className="col-lg-5 offset-lg-1">
               <div className="product_text">
                 <h3>{product.name}</h3>
-               <div className='d-flex'>
+                <div className='d-flex'>
                   <h2>
                     {product.price.toLocaleString()} <span>VND</span>
                   </h2>
-                  <del style={{marginLeft:10, fontWeight:600, color:'#707070'}}>
+                  <del style={{ marginLeft: 10, fontWeight: 600, color: '#707070' }}>
                     {product.original_price.toLocaleString()} <span>VND</span>
                   </del>
-               </div>
+                </div>
                 <ul className="list">
                   <li>
                     <span style={{ color: '#555555' }}>Danh mục</span>: {product.type}
                   </li>
                   <li>
                     <span>Tình trạng</span>: {product.countInStock > 0 ? 'Còn hàng' : 'Hết hàng'}
+                  </li>
+                  <li className='mt-3'>
+                    <p style={{ padding: 0 }} className='color'>Màu sắc</p>
+                    <Radio.Group
+                      onChange={(e) => setSelectedColor(e.target.value)}
+                      value={selectedColor}
+                    >
+                      {product?.color.map((colors, index) => (
+                        <Radio key={index} value={colors}>
+                          {colors}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
+                  </li>
+                  <li className='mt-3'>
+                    <p style={{ padding: 0 }} className='color'>Kích thước</p>
+                    <Radio.Group
+                      onChange={(e) => setSelectedSize(e.target.value)}
+                      value={selectedSize}
+                    >
+                      {product?.size.map((sizes, a) => (
+                        <Radio key={a} value={sizes}>
+                          {sizes}
+                        </Radio>
+                      ))}
+                    </Radio.Group>
                   </li>
                 </ul>
                 <p>{product.description}</p>

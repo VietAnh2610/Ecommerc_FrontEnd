@@ -18,6 +18,8 @@ const CartComponents = (props) => {
     rating,
     type,
     original_price,
+    size,
+    color,
   } = props;
   const dispatch = useDispatch();
   const location = useLocation();
@@ -57,6 +59,7 @@ const CartComponents = (props) => {
     console.error("Invalid product ID:", id);
     return null;
   }
+
   const handleQuickView = () => {
     setQuickViewVisible(true);
   };
@@ -73,27 +76,19 @@ const CartComponents = (props) => {
             {Array.isArray(image) ? (
               <Link to={`/product-detail/${id}`}>
                 <div className="aaaa">
-                  <img
-                    className="img-fluid"
-                    src={image[0]}
-                    alt={name}
-                  />
+                  <img className="img-fluid" src={image[0]} alt={name} />
                 </div>
               </Link>
             ) : (
-              <img
-                className="img-fluid"
-                src={image}
-                alt={name}
-              />
+              <img className="img-fluid" src={image} alt={name} />
             )}
             <div className="p_icon quickview">
               <Link onClick={handleQuickView}>
                 <i className="fa-regular fa-eye"></i>
               </Link>
-              <a onClick={handleAddCart}>
+              <Link to={`/product-detail/${id}`}>
                 <i className="fa-solid fa-cart-plus"></i>
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -127,6 +122,8 @@ const CartComponents = (props) => {
             rating,
             type,
             original_price,
+            size,
+            color,
           }}
           onClose={closeQuickView}
         />

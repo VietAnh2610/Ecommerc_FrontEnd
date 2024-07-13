@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Input, Modal, Button, Select } from "antd";
 import * as OrderService from "../../services/OrderService";
+import * as ProductService from "../../services/ProductService"; 
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import LoadingComponent from "../LoadingComponent/LoadingComponent";
@@ -19,7 +20,8 @@ const TableComponentOrder = () => {
   const [loading, setLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [accessToken, setAccessToken] = useState("");
-
+  const [availableSizes, setAvailableSizes] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (token) {
@@ -27,7 +29,19 @@ const TableComponentOrder = () => {
       setAccessToken(cleanToken);
     }
   }, []);
-
+  const fetchProductDetails = async (productId) => {
+    try {
+      const res = await ProductService.getDetailsProduct(productId);
+      if (res && res.data) {
+        return res.data;
+      }
+      return null;
+    } catch (error) {
+      console.error("Lỗi khi tải dữ liệu chi tiết sản phẩm:", error);
+      throw error;
+    }
+  };
+  
   const fetchOrders = async () => {
     try {
       setLoading(true);
@@ -60,10 +74,23 @@ const TableComponentOrder = () => {
     setSearchText(value);
   };
 
-  const handleEditOrder = (record) => {
+  const handleEditOrder = async (record) => {
     setSelectedOrder(record);
     setIsModalVisible(true);
+    
+    // Fetch product details to get available sizes and colors
+    const productId = record.orderItems[0].product; 
+    const product = await ProductService.getDetailsProduct(productId, accessToken);
+    console.log('productId',productId)
+    // Assuming only one item per order
+    try {
+      setAvailableSizes(product.data.size || []);
+      setAvailableColors(product.data.color || []);
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
   };
+  
 
   const handleDetailsOrder = (record) => {
     setSelectedOrder(record);
@@ -88,7 +115,7 @@ const TableComponentOrder = () => {
     });
   };
 
-  const handleDeleteSelectedOrders = (userId, orderId) => {
+  const handleDeleteSelectedOrders = () => {
     Modal.confirm({
       title: "Xác nhận xóa",
       content: "Bạn có chắc chắn muốn xóa các đơn hàng đã chọn?",
@@ -96,7 +123,7 @@ const TableComponentOrder = () => {
       okType: "danger",
       cancelText: "Hủy",
       onOk() {
-        DeleteSelectedOrders(userId, orderId);
+        DeleteSelectedOrders();
       },
     });
   };
@@ -144,19 +171,25 @@ const TableComponentOrder = () => {
       if (selectedOrder && accessToken) {
         const userId = selectedOrder.user;
         const orderId = selectedOrder._id;
+        
         const data = {
           shippingAddress: selectedOrder.shippingAddress,
           isPaid: selectedOrder.isPaid,
           isDelivered: selectedOrder.isPaid ? false : selectedOrder.isDelivered,
+          orderItems: selectedOrder.orderItems.map(item => ({
+            ...item,
+            selectedSize: item.selectedSize,
+            selectedColor: item.selectedColor,
+          }))
         };
-
+  
         const response = await OrderService.updateOrder(
           userId,
           orderId,
           data,
           accessToken
         );
-
+  
         setIsModalVisible(false);
         refetch().then(() => {
           toast.success("Cập nhật đơn hàng thành công");
@@ -169,6 +202,7 @@ const TableComponentOrder = () => {
       toast.error("Failed to update order");
     }
   };
+  
 
   const columns = [
     {
@@ -197,6 +231,34 @@ const TableComponentOrder = () => {
       key: "totalPrice",
       render: (totalPrice) => `${totalPrice}`,
       sorter: (a, b) => a.totalPrice - b.totalPrice,
+    },
+    {
+      title: "Kích thước",
+      dataIndex: "orderItems",
+      key: "selectedSize",
+      render: (orderItems) => (
+        <>
+          {orderItems.map((item, index) => (
+            <div key={index}>
+              {item.selectedSize}
+            </div>
+          ))}
+        </>
+      ),
+    },
+    {
+      title: "Màu sắc",
+      dataIndex: "orderItems",
+      key: "selectedColor",
+      render: (orderItems) => (
+        <>
+          {orderItems.map((item, index) => (
+            <div key={index}>
+              {item.selectedColor}
+            </div>
+          ))}
+        </>
+      ),
     },
     {
       title: "Phương thức thanh toán",
@@ -281,6 +343,7 @@ const TableComponentOrder = () => {
             ></i>
           </button>
           <button
+         
             onClick={() => handleEditOrder(record)}
             style={{ backgroundColor: "rgb(250, 226, 197)", border: "none" }}
             className="btn btn-primary btn-sm edit"
@@ -304,6 +367,7 @@ const TableComponentOrder = () => {
             title="Chi tiết"
             data-toggle="modal"
             data-target="#ModalUP"
+         
           >
             <i
               style={{ color: "var(--text-color)" }}
@@ -398,88 +462,138 @@ const TableComponentOrder = () => {
       <div style={{ marginTop: "16px" }}></div>
 
       <Modal
-        title="Chỉnh sửa đơn hàng"
-        visible={isModalVisible}
-        onCancel={handleCancel}
-        footer={[
-          <Button key="cancel" onClick={handleCancel}>
-            Hủy
-          </Button>,
-          <Button key="save" type="primary" onClick={handleSave}>
-            Lưu
-          </Button>,
-        ]}
-      >
-        {selectedOrder && (
-          <>
-            <div className="mb-2">
-              <label>Tên khách hàng:</label>
-              <Input
-                value={selectedOrder.shippingAddress.fullName}
-                onChange={(e) =>
-                  setSelectedOrder({
-                    ...selectedOrder,
-                    shippingAddress: {
-                      ...selectedOrder.shippingAddress,
-                      fullName: e.target.value,
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="mb-2">
-              <label>Số điện thoại:</label>
-              <Input
-                value={selectedOrder.shippingAddress.phone}
-                onChange={(e) =>
-                  setSelectedOrder({
-                    ...selectedOrder,
-                    shippingAddress: {
-                      ...selectedOrder.shippingAddress,
-                      phone: e.target.value,
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="mb-2">
-              <label>Địa chỉ:</label>
-              <Input
-                value={selectedOrder.shippingAddress.address}
-                onChange={(e) =>
-                  setSelectedOrder({
-                    ...selectedOrder,
-                    shippingAddress: {
-                      ...selectedOrder.shippingAddress,
-                      address: e.target.value,
-                    },
-                  })
-                }
-              />
-            </div>
-            <div className="mb-2">
-              <label>Trạng thái đơn hàng:</label>
-              <Select
-                value={selectedOrder.isPaid ? "Đã xác nhận" : "Chưa xác nhận"}
-                onChange={(value) =>
-                  setSelectedOrder({
-                    ...selectedOrder,
-                    isPaid: value === "Đã xác nhận",
-                    isDelivered:
-                      value === "Đã xác nhận"
-                        ? false
-                        : selectedOrder.isDelivered,
-                  })
-                }
-                style={{ width: "100%" }}
-              >
-                <Option value="Đã xác nhận">Đã xác nhận</Option>
-                <Option value="Chưa xác nhận">Chưa xác nhận</Option>
-              </Select>
-            </div>
-          </>
-        )}
-      </Modal>
+  title="Chỉnh sửa đơn hàng"
+  visible={isModalVisible}
+  onCancel={handleCancel}
+  footer={[
+    <Button key="cancel" onClick={handleCancel}>
+      Hủy
+    </Button>,
+    <Button key="save" type="primary" onClick={handleSave}>
+      Lưu
+    </Button>,
+  ]}
+>
+  {selectedOrder && (
+    <>
+      <div className="mb-2">
+        <label>Tên khách hàng:</label>
+        <Input
+          value={selectedOrder.shippingAddress.fullName}
+          onChange={(e) =>
+            setSelectedOrder({
+              ...selectedOrder,
+              shippingAddress: {
+                ...selectedOrder.shippingAddress,
+                fullName: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+      <div className="mb-2">
+        <label>Số điện thoại:</label>
+        <Input
+          value={selectedOrder.shippingAddress.phone}
+          onChange={(e) =>
+            setSelectedOrder({
+              ...selectedOrder,
+              shippingAddress: {
+                ...selectedOrder.shippingAddress,
+                phone: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+      <div className="mb-2">
+        <label>Địa chỉ:</label>
+        <Input
+          value={selectedOrder.shippingAddress.address}
+          onChange={(e) =>
+            setSelectedOrder({
+              ...selectedOrder,
+              shippingAddress: {
+                ...selectedOrder.shippingAddress,
+                address: e.target.value,
+              },
+            })
+          }
+        />
+      </div>
+
+      {selectedOrder.orderItems.map((item, index) => (
+        <div key={index} className="mb-2">
+          <div>
+            <label>Tên sản phẩm:</label>
+            <Input value={item.name} disabled />
+          </div>
+          <div className="mb-2">
+            <label>Kích thước:</label>
+            <Select
+              value={item.selectedSize}
+              onChange={(value) =>
+                setSelectedOrder({
+                  ...selectedOrder,
+                  orderItems: selectedOrder.orderItems.map((orderItem, i) =>
+                    i === index ? { ...orderItem, selectedSize: value } : orderItem
+                  ),
+                })
+              }
+              style={{ width: "100%" }}
+            >
+              {availableSizes.map((size) => (
+                <Option key={size} value={size}>
+                  {size}
+                </Option>
+              ))}
+            </Select>
+          </div>
+          <div className="mb-2">
+            <label>Màu sắc:</label>
+            <Select
+              value={item.selectedColor}
+              onChange={(value) =>
+                setSelectedOrder({
+                  ...selectedOrder,
+                  orderItems: selectedOrder.orderItems.map((orderItem, i) =>
+                    i === index ? { ...orderItem, selectedColor: value } : orderItem
+                  ),
+                })
+              }
+              style={{ width: "100%" }}
+            >
+              {availableColors.map((color) => (
+                <Option key={color} value={color}>
+                  {color}
+                </Option>
+              ))}
+            </Select>
+          </div>
+        </div>
+      ))}
+
+      <div className="mb-2">
+        <label>Trạng thái đơn hàng:</label>
+        <Select
+          value={selectedOrder.isPaid ? "Đã xác nhận" : "Chưa xác nhận"}
+          onChange={(value) =>
+            setSelectedOrder({
+              ...selectedOrder,
+              isPaid: value === "Đã xác nhận",
+              isDelivered: value === "Đã xác nhận" ? false : selectedOrder.isDelivered,
+            })
+          }
+          style={{ width: "100%" }}
+        >
+          <Option value="Đã xác nhận">Đã xác nhận</Option>
+          <Option value="Chưa xác nhận">Chưa xác nhận</Option>
+        </Select>
+      </div>
+    </>
+  )}
+</Modal>
+
 
       <OrderDetails
         order={selectedOrder}
