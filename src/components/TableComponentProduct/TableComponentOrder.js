@@ -68,11 +68,9 @@ const TableComponentOrder = () => {
     setIsModalVisible(true);
   
     try {
-      // Khởi tạo mảng để lưu kích thước và màu sắc của từng sản phẩm
       let sizesMap = {};
       let colorsMap = {};
   
-      // Duyệt qua từng sản phẩm trong đơn hàng
       for (const item of record.orderItems) {
         const product = await ProductService.getDetailsProduct(item.product, accessToken);
   
@@ -80,7 +78,6 @@ const TableComponentOrder = () => {
         colorsMap[item.product] = product.data.color || [];
       }
   
-      // Cập nhật kích thước và màu sắc khả dụng
       setAvailableSizes(sizesMap);
       setAvailableColors(colorsMap);
     } catch (error) {

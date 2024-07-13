@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Input, Modal, Form, Button, Select } from "antd";
+import { Table, Input, Modal, Form, Button, Select,Checkbox } from "antd";
 import * as ProductService from "../../services/ProductService";
 import { useQuery } from "@tanstack/react-query";
 import "./TableComponent.scss";
@@ -91,9 +91,9 @@ const TableComponent = () => {
     form.setFieldsValue(record);
 
     if (record.type && categories.includes(record.type)) {
-      setNewCategory(false); 
+      setNewCategory(false);
     } else {
-      setNewCategory(true); 
+      setNewCategory(true);
     }
 
     const images = Array.isArray(record.image) ? record.image : [];
@@ -142,6 +142,8 @@ const TableComponent = () => {
           image: base64Images,
           size: sizes,
           color: colors,
+          isFeatured: values.isFeatured,
+          isFeatured: values.isFeatured,
         },
         accessToken
       );
@@ -208,7 +210,7 @@ const TableComponent = () => {
         <>
           {Array.isArray(image) && image.length > 0 && (
             <img
-              src={image[0]} 
+              src={image[0]}
               alt={"ảnh sản phẩm"}
               style={{ width: "70px", marginRight: "5px" }}
             />
@@ -257,6 +259,13 @@ const TableComponent = () => {
       render: (colors) => colors.join(", "),
       sorter: (a, b) => a.colors.length - b.colors.length,
     },
+    {
+      title: "Sản phẩm nổi bật",
+      dataIndex: "isFeatured",
+      key: "isFeatured",
+      render: (isFeatured) => <span>{isFeatured ? "Có" : "Không"}</span>,
+    },
+
     {
       title: "Tình trạng",
       dataIndex: "countInStock",
@@ -420,7 +429,6 @@ const TableComponent = () => {
             <Input />
           </Form.Item>
 
-          {/* Trường ảnh để người dùng tải lên */}
           <Form.Item label="Ảnh" name="image">
             <div>
               <label
@@ -493,16 +501,15 @@ const TableComponent = () => {
             <Select
               placeholder="Chọn danh mục hoặc thêm mới"
               // defaultValue={selectedProduct?.type}
-            
+
               onChange={(value) => {
                 if (value === "new") {
                   setNewCategory(true);
                 } else {
-                  setNewCategory(false); 
+                  setNewCategory(false);
                 }
               }}
             >
-                
               {categories.map((type) => (
                 <Option key={type} value={type}>
                   {type}
@@ -552,6 +559,14 @@ const TableComponent = () => {
           >
             <Input type="number" placeholder="Nhập số lượng" />
           </Form.Item>
+          <Form.Item
+            label="Sản phẩm nổi bật"
+            name="isFeatured"
+            valuePropName="checked"
+          >
+            <Checkbox />
+          </Form.Item>
+
           <Form.Item
             label="Mô tả"
             name="description"

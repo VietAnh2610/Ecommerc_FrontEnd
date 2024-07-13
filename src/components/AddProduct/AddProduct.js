@@ -18,7 +18,8 @@ const AddProduct = () => {
     size:[],
     color:[],
     description: "",
-    original_price: ""
+    original_price: "",
+    isFeatured: false 
   });
 
   const [selectedAvatars, setSelectedAvatars] = useState([]);
@@ -41,18 +42,21 @@ const AddProduct = () => {
   }, []);
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     let newValue = value;
-
-    if (name === "size" || name === "color") {
+  
+    if (type === "checkbox") {
+      newValue = checked;
+    } else if (name === "size" || name === "color") {
       newValue = value.split(",").map(item => item.trim());
     }
-
+  
     setStateProduct({
       ...stateProduct,
       [name]: newValue
     });
   };
+  
 
   const handleAvatarChange = (e) => {
     const files = Array.from(e.target.files);
@@ -96,7 +100,6 @@ const AddProduct = () => {
       formErrors.name = "Vui lòng nhập tên sản phẩm.";
     }
    
-    // Kiểm tra các trường thông tin khác...
   
     if (Object.keys(formErrors).length > 0) {
       setErrors(formErrors);
@@ -232,7 +235,7 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="form-group col-md-3">
+          <div className="form-group col-md-3 my-3 my-3 ">
             <label className="control-label">Danh mục</label>
             <select
               className="form-control"
@@ -251,7 +254,7 @@ const AddProduct = () => {
             {errors.type && <p className="error-messages">{errors.type}</p>}
           </div>
 
-          <div className="form-group col-md-3">
+          <div className="form-group col-md-3 my-3">
             <label className="control-label">Giá gốc</label>
             <input
               className="form-control"
@@ -262,7 +265,7 @@ const AddProduct = () => {
             />
 
           </div>
-          <div  className="form-group col-md-3">
+          <div  className="form-group col-md-3 my-3">
             <label className="control-label">Giá bán</label>
             <input
               className="form-control"
@@ -273,7 +276,7 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="form-group col-md-3">
+          <div className="form-group col-md-3 my-3">
             <label className="control-label">Đánh giá</label>
             <input
               className="form-control"
@@ -283,9 +286,20 @@ const AddProduct = () => {
               name="rating"
             />
           </div>
+          <div className="form-group col-md-12 my-2 d-flex align-items-center">
+            <label style={{padding:0}}   className="control-label">Sản phẩm nổi bật</label>
+            <input
+            style={{marginLeft:10}}
+              type="checkbox"
+              name="isFeatured"
+              checked={stateProduct.isFeatured}
+              onChange={handleOnChange}
+              className="large-checkbox"
+            />
+          </div>
 
-          <div className="form-group col-md-12">
-            <label className="control-label">Ảnh sản phẩm</label>
+          <div className="form-group col-md-12 d-flex align-items-center">
+            <label style={{marginRight:10}} className="control-label">Ảnh sản phẩm</label>
             <label htmlFor="avatarInput" className="file-label1">
               <i className="fa-solid fa-cloud-arrow-up"></i>
               <p>Tải lên ảnh</p>

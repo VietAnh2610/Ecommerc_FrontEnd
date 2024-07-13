@@ -16,6 +16,7 @@ import QuanDaiNam from "../../assets/images/quandainam.png";
 import QuanJeans from "../../assets/images/quanjeans.png";
 import QuanShort from "../../assets/images/quanshort.png";
 import BlogComponent from "../../components/BlogComponent/BlogComponent";
+import FeaturedProductsComponent from "../../components/FeaturedProductsComponent/FeaturedProductsComponent";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -183,23 +184,24 @@ const HomePage = () => {
         </div>
       </section>
 
-      <section className="feature_product_area">
+      <section className="feature_product_area container">
         <div className="row justify-content-center">
-          <div className="col-lg-12">
+          <div className="col-lg-12 ">
             <div class="main_title">
               <h2>
                 <span>Sản phẩm nổi bật</span>
               </h2>
               <p>Bạn sẽ không thất vọng khi lựa chọn</p>
+              <FeaturedProductsComponent/>
             </div>
           </div>
         </div>
       </section>
       <div className="col-lg-12  container ">
+        <h3 >Tất cả sản phẩm</h3>
         <div className="products row d-flex flex-wrap">
           {products?.data
             ?.filter((product) => product.type)
-            // ?.filter((product) => product.type === "Quần jeans")
             .slice(0, 8)
             .map((product) => {
               return (
