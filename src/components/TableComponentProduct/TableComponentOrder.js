@@ -29,18 +29,7 @@ const TableComponentOrder = () => {
       setAccessToken(cleanToken);
     }
   }, []);
-  const fetchProductDetails = async (productId) => {
-    try {
-      const res = await ProductService.getDetailsProduct(productId);
-      if (res && res.data) {
-        return res.data;
-      }
-      return null;
-    } catch (error) {
-      console.error("Lỗi khi tải dữ liệu chi tiết sản phẩm:", error);
-      throw error;
-    }
-  };
+
   
   const fetchOrders = async () => {
     try {
@@ -77,19 +66,29 @@ const TableComponentOrder = () => {
   const handleEditOrder = async (record) => {
     setSelectedOrder(record);
     setIsModalVisible(true);
-    
-    // Fetch product details to get available sizes and colors
-    const productId = record.orderItems[0].product; 
-    const product = await ProductService.getDetailsProduct(productId, accessToken);
-    console.log('productId',productId)
-    // Assuming only one item per order
+  
     try {
-      setAvailableSizes(product.data.size || []);
-      setAvailableColors(product.data.color || []);
+      // Khởi tạo mảng để lưu kích thước và màu sắc của từng sản phẩm
+      let sizesMap = {};
+      let colorsMap = {};
+  
+      // Duyệt qua từng sản phẩm trong đơn hàng
+      for (const item of record.orderItems) {
+        const product = await ProductService.getDetailsProduct(item.product, accessToken);
+  
+        sizesMap[item.product] = product.data.size || [];
+        colorsMap[item.product] = product.data.color || [];
+      }
+  
+      // Cập nhật kích thước và màu sắc khả dụng
+      setAvailableSizes(sizesMap);
+      setAvailableColors(colorsMap);
     } catch (error) {
-      console.error("Error fetching product details:", error);
+      console.error("Lỗi khi lấy chi tiết sản phẩm:", error);
     }
   };
+  
+  
   
 
   const handleDetailsOrder = (record) => {
@@ -378,7 +377,7 @@ const TableComponentOrder = () => {
       ),
     },
   ];
-
+// console.log("selectedOrder",selectedOrder)
   const filteredData = orders?.data.filter((order) =>
     order.shippingAddress.fullName
       .toLowerCase()
@@ -542,7 +541,7 @@ const TableComponentOrder = () => {
               }
               style={{ width: "100%" }}
             >
-              {availableSizes.map((size) => (
+              {availableSizes[item.product]?.map((size) => (
                 <Option key={size} value={size}>
                   {size}
                 </Option>
@@ -563,7 +562,7 @@ const TableComponentOrder = () => {
               }
               style={{ width: "100%" }}
             >
-              {availableColors.map((color) => (
+              {availableColors[item.product]?.map((color) => (
                 <Option key={color} value={color}>
                   {color}
                 </Option>
@@ -593,7 +592,6 @@ const TableComponentOrder = () => {
     </>
   )}
 </Modal>
-
 
       <OrderDetails
         order={selectedOrder}
